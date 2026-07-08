@@ -1,0 +1,18 @@
+{
+  "name": "抹茶味的琴",
+  "title": "Java 后端开发者",
+  "avatar": "/avatar.png",
+  "location": "China",
+  "bio": "专注 Java 后端开发，喜欢把稳定的工程实践和清爽的用户体验放在一起。",
+  "tags": ["Java", "钢琴", "MySQL", "Vue", "Docker", "Linux"],
+  "socialLinks": [
+    {
+      "label": "GitHub",
+      "href": "https://github.com/itxiaobai"
+    },
+    {
+      "label": "Email",
+      "href": "mailto:hello@example.com"
+    }
+  ]
+}

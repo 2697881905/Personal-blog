@@ -1,0 +1,6 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title">
+  <title id="title">MyBatis</title>
+  <rect width="96" height="96" rx="18" fill="#161B22"/>
+  <path d="M25 66V30H34L48 52L62 30H71V66H62V45L51 62H45L34 45V66H25Z" fill="#C9D1D9"/>
+  <path d="M21 72H75" stroke="#58A6FF" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,92 @@
+---
+import Footer from '../components/vue/Footer.vue';
+import '../styles/global.css';
+
+type SocialLink = {
+  label: string;
+  href: string;
+};
+
+type Profile = {
+  name: string;
+  title: string;
+  socialLinks: SocialLink[];
+};
+
+const { profile, title = `${profile.name} | ${profile.title}` } = Astro.props as {
+  profile: Profile;
+  title?: string;
+};
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={`${profile.name} 的个人技术主页`} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body class="bg-background font-sans text-text antialiased">
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+      <video
+        class="absolute inset-0 h-full w-full scale-110 object-cover bg-background"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+      >
+        <source src="/background.mp4" type="video/mp4" />
+      </video>
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-background/80 via-background/75 to-background/95"
+        aria-hidden="true"
+      ></div>
+    </div>
+
+    <div id="page-entrance" class="page-entrance" aria-hidden="true">
+      <div class="page-entrance__ring"></div>
+    </div>
+
+    <script is:inline>
+      (function () {
+        function hideEntrance() {
+          var el = document.getElementById('page-entrance');
+          if (el) { el.style.display = 'none'; el.classList.add('is-done'); }
+        }
+        window.addEventListener('load', function () { setTimeout(hideEntrance, 4000); });
+        setTimeout(hideEntrance, 6000);
+      })();
+    </script>
+
+    <main class="relative z-10">
+      <slot />
+    </main>
+
+    <div class="relative z-10">
+      <Footer client:load name={profile.name} socialLinks={profile.socialLinks} />
+    </div>
+
+    <script>
+      // Pause full-screen background video decoding when the tab is hidden to
+      // avoid continuous frame decoding / repaint while not visible.
+      document.addEventListener('visibilitychange', () => {
+        const video = document.querySelector('video');
+        if (!video) return;
+        if (document.hidden) {
+          video.pause();
+        } else {
+          video.play().catch(() => {});
+        }
+      });
+    </script>
+  </body>
+</html>

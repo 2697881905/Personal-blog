@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Java",
+    "logo": "/logos/java.svg"
+  },
+  {
+    "name": "Python",
+    "logo": "/logos/python.svg"
+  },
+  {
+    "name": "Spring",
+    "logo": "/logos/spring.svg"
+  },
+  {
+    "name": "SpringBoot",
+    "logo": "/logos/springboot.svg"
+  },
+  {
+    "name": "SpringMVC",
+    "logo": "/logos/spring.svg"
+  },
+  {
+    "name": "MyBatis",
+    "logo": "/logos/mybatis.svg"
+  },
+  {
+    "name": "MySQL",
+    "logo": "/logos/mysql.svg"
+  },
+  {
+    "name": "HTML",
+    "logo": "/logos/html5.svg"
+  },
+  {
+    "name": "CSS",
+    "logo": "/logos/css.svg"
+  },
+  {
+    "name": "JavaScript",
+    "logo": "/logos/javascript.svg"
+  },
+  {
+    "name": "Vue",
+    "logo": "/logos/vue.svg"
+  },
+  {
+    "name": "Git",
+    "logo": "/logos/git.svg"
+  },
+  {
+    "name": "Maven",
+    "logo": "/logos/maven.svg"
+  },
+  {
+    "name": "Junit",
+    "logo": "/logos/junit.svg"
+  },
+  {
+    "name": "Linux操作系统",
+    "logo": "/logos/linux.svg"
+  },
+  {
+    "name": "Redis",
+    "logo": "/logos/redis.svg"
+  },
+  {
+    "name": "IDEA",
+    "logo": "/logos/idea.svg"
+  },
+  {
+    "name": "PyCharm",
+    "logo": "/logos/pycharm.svg"
+  },
+  {
+    "name": "VisualStudioCode",
+    "logo": "/logos/vscode.svg"
+  },
+  {
+    "name": "GitHub",
+    "logo": "/logos/github.svg"
+  },
+  {
+    "name": "Docker",
+    "logo": "/logos/docker.svg"
+  },
+  {
+    "name": "Trae",
+    "logo": "/logos/trae.svg"
+  },
+  {
+    "name": "CodeX",
+    "logo": "/logos/codex.svg"
+  },
+  {
+    "name": "Nginx",
+    "logo": "/logos/nginx.svg"
+  }
+]

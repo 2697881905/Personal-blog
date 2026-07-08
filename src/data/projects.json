@@ -1,0 +1,21 @@
+[
+  {
+    "title": "MindType恋爱人格测试",
+    "description": "基于RuoYi框架开发的情感测试网站",
+    "logo": "/logos/mindtype.svg",
+    "gitee": "https://gitee.com/bai-yi-fei/mind-type",
+    "tags": ["Java", "SpringBoot", "MyBatis", "MySQL"]
+  },
+  {
+    "title": "校园任务协作平台",
+    "description": "面向学生团队的任务协作系统，提供项目看板、成员分工和进度追踪能力。",
+    "gitee": "https://gitee.com/itxiaobai/campus-task-board",
+    "tags": ["Vue", "JavaScript", "SpringMVC", "MySQL"]
+  },
+  {
+    "title": "开发者工具箱",
+    "description": "收集常用开发辅助功能的小工具集合，包括格式转换、接口调试记录和日志检索。",
+    "gitee": "https://github.com/itxiaobai/dev-toolbox",
+    "tags": ["Python", "Java", "Git", "Maven"]
+  }
+]
