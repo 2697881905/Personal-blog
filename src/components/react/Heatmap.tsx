@@ -60,8 +60,8 @@ export default function Heatmap() {
     <section className="py-1" aria-label="贡献琴卷">
       <div className="pb-1">
         <div className="w-full">
-          <div className="grid items-stretch grid-cols-[2.45rem_minmax(0,1fr)] gap-2 sm:grid-cols-[2.75rem_minmax(0,1fr)] sm:gap-3">
-            <div className="grid h-full grid-rows-7 gap-[2px]">
+          <div className="grid items-stretch grid-cols-[minmax(0,1fr)] gap-2 sm:grid-cols-[2.75rem_minmax(0,1fr)] sm:gap-3">
+            <div className="hidden h-full grid-rows-7 gap-[2px] sm:grid">
               {notes.map((note) => {
                 const isBlackTone = ['A', 'G', 'D'].includes(note);
 
@@ -116,8 +116,8 @@ export default function Heatmap() {
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-[2.45rem_minmax(0,1fr)] gap-2 sm:grid-cols-[2.75rem_minmax(0,1fr)] sm:gap-3">
-            <span aria-hidden="true" />
+          <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-2 sm:grid-cols-[2.75rem_minmax(0,1fr)] sm:gap-3">
+            <span aria-hidden="true" className="hidden sm:block" />
             <div className="relative h-10 overflow-hidden rounded-xl border border-[#111827] shadow-lg shadow-black/30 sm:h-11">
               <div
                 className="grid h-full gap-[2px]"

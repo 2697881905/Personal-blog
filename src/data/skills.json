@@ -94,5 +94,13 @@
   {
     "name": "Nginx",
     "logo": "/logos/nginx.svg"
+  },
+  {
+    "name": "ArkTS",
+    "logo": "/logos/arkts.svg"
+  },
+  {
+    "name": "DevEco Studio",
+    "logo": "/logos/devecostudio.svg"
   }
 ]
