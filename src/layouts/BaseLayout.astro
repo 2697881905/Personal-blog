@@ -35,14 +35,22 @@ const { profile, title = `${profile.name} | ${profile.title}` } = Astro.props as
     <title>{title}</title>
   </head>
   <body class="bg-background font-sans text-text antialiased">
-    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+    <div class="bg-video-layer pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
       <video
-        class="absolute inset-0 h-full w-full scale-110 object-cover bg-background"
+        id="bg-video"
+        class="bg-video"
         autoplay
         muted
         loop
         playsinline
-        preload="metadata"
+        webkit-playsinline="true"
+        x5-playsinline="true"
+        x5-video-player-type="h5"
+        x5-video-player-fullscreen="false"
+        x5-video-orientation="portrait"
+        preload="auto"
+        disablepictureinpicture
+        disableremoteplayback
       >
         <source src="/background.mp4" type="video/mp4" />
       </video>
@@ -75,18 +83,51 @@ const { profile, title = `${profile.name} | ${profile.title}` } = Astro.props as
       <Footer client:load name={profile.name} socialLinks={profile.socialLinks} />
     </div>
 
-    <script>
-      // Pause full-screen background video decoding when the tab is hidden to
-      // avoid continuous frame decoding / repaint while not visible.
-      document.addEventListener('visibilitychange', () => {
-        const video = document.querySelector('video');
+    <script is:inline>
+      (function () {
+        var video = document.getElementById('bg-video');
         if (!video) return;
-        if (document.hidden) {
-          video.pause();
-        } else {
-          video.play().catch(() => {});
+
+        function tryPlay() {
+          if (video.paused) {
+            var p = video.play();
+            if (p && typeof p.catch === 'function') {
+              p.catch(function () {
+                video.muted = true;
+                video.play().catch(function () {});
+              });
+            }
+          }
         }
-      });
+
+        video.addEventListener('canplay', tryPlay);
+        video.addEventListener('loadeddata', tryPlay);
+        video.addEventListener('loadedmetadata', tryPlay);
+
+        function onGesture() {
+          tryPlay();
+          if (!video.paused) {
+            document.removeEventListener('touchstart', onGesture);
+            document.removeEventListener('click', onGesture);
+          }
+        }
+        document.addEventListener('touchstart', onGesture, { passive: true });
+        document.addEventListener('click', onGesture);
+
+        if (document.readyState !== 'loading') {
+          tryPlay();
+        } else {
+          document.addEventListener('DOMContentLoaded', tryPlay);
+        }
+
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) {
+            video.pause();
+          } else {
+            tryPlay();
+          }
+        });
+      })();
     </script>
   </body>
 </html>

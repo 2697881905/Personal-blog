@@ -564,6 +564,49 @@ input {
   }
 }
 
+/* ===== Background video layer (cross-browser) ===== */
+/* 显式规则：Honor/WeChat/UC 等定制浏览器对 Tailwind 的 absolute/object-cover
+   组合支持不一致，video 默认 display:inline 会导致绝对定位失效（视频跑到页面顶部）。
+   这里强制 block + 绝对定位，并用尺寸放大 + 负偏移（非 transform）居中，
+   避免 transform 创建独立层叠上下文逃逸父级 z-0 容器。 */
+.bg-video-layer {
+  z-index: 0;
+  contain: layout style paint;
+}
+
+.bg-video {
+  display: block;
+  position: absolute;
+  top: -6%;
+  left: -6%;
+  width: 112%;
+  height: 112%;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  background-color: var(--bg);
+  z-index: 0;
+  /* 禁止移动端浏览器把视频提升到顶层合成层 */
+  -webkit-transform: none;
+  transform: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+  /* 避免某些内核对 video 元素强制 hardware layer */
+  will-change: auto;
+  backface-visibility: visible;
+}
+
+/* 老旧内核（不支持 object-fit）兜底：拉伸填充 */
+@supports not (object-fit: cover) {
+  .bg-video {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 /* ===== Page entrance overlay (curtain) ===== */
 .page-entrance {
   position: fixed;
