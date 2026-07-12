@@ -39,6 +39,7 @@ const { profile, title = `${profile.name} | ${profile.title}` } = Astro.props as
       <video
         id="bg-video"
         class="bg-video"
+        poster="/background-poster.png"
         autoplay
         muted
         loop
@@ -55,7 +56,7 @@ const { profile, title = `${profile.name} | ${profile.title}` } = Astro.props as
         <source src="/background.mp4" type="video/mp4" />
       </video>
       <div
-        class="absolute inset-0 bg-gradient-to-b from-background/80 via-background/75 to-background/95"
+        class="absolute inset-0 bg-gradient-to-b from-background/60 via-background/55 to-background/85"
         aria-hidden="true"
       ></div>
     </div>
@@ -103,6 +104,14 @@ const { profile, title = `${profile.name} | ${profile.title}` } = Astro.props as
         video.addEventListener('canplay', tryPlay);
         video.addEventListener('loadeddata', tryPlay);
         video.addEventListener('loadedmetadata', tryPlay);
+
+        // WeChat 内置浏览器（iOS WKWebView / Android X5）自动播放标准方案：
+        // 监听微信 JS Bridge 就绪事件，或 Bridge 已存在时立即触发播放。
+        if (typeof window.WeixinJSBridge !== 'undefined') {
+          tryPlay();
+        } else {
+          document.addEventListener('WeixinJSBridgeReady', tryPlay, false);
+        }
 
         function onGesture() {
           tryPlay();
