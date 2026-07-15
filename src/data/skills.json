@@ -21,7 +21,7 @@
   },
   {
     "name": "MyBatis",
-    "logo": "/logos/mybatis.svg"
+    "logo": "/logos/mybatis.png"
   },
   {
     "name": "MySQL",
@@ -97,10 +97,10 @@
   },
   {
     "name": "ArkTS",
-    "logo": "/logos/arkts.svg"
+    "logo": "/logos/arkts.png"
   },
   {
     "name": "DevEco Studio",
-    "logo": "/logos/devecostudio.svg"
+    "logo": "/logos/devecostudio.png"
   }
 ]
