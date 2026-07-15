@@ -12,7 +12,7 @@ const weekCount = 52;
 const notes = ['B', 'A', 'G', 'F', 'E', 'D', 'C'];
 const impactPoint = 0.61;
 const fallingChance = 0.1;
-const fallCycleRange = [5.5, 8.5] as const;
+const fallCycleRange = [7, 11] as const;
 const whiteKeys = Array.from({ length: weekCount }, (_, index) => {
   const note = ['C', 'D', 'E', 'F', 'G', 'A', 'B'][index % 7];
 
@@ -46,7 +46,7 @@ export default function Heatmap() {
           return {
             cycle,
             delay,
-            fallDistance: 44 + (notes.length - 1 - dayIndex) * 17,
+            fallDistance: 30 + (notes.length - 1 - dayIndex) * 10,
             isFalling,
             pulseDelay: delay + cycle * impactPoint,
             value,
