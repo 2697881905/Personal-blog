@@ -17,6 +17,7 @@ function toggle() {
   <article
     class="liquid-surface-flat liquid-hover group relative flex aspect-square cursor-pointer items-center justify-center rounded-lg p-1 sm:rounded-xl sm:p-1.5 lg:rounded-2xl lg:p-2"
     :title="name"
+    data-reveal-item
     :aria-label="name"
     tabindex="0"
     @click="toggle"

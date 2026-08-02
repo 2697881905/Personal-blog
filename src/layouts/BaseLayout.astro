@@ -1,5 +1,4 @@
 ---
-import Footer from '../components/vue/Footer.vue';
 import '../styles/global.css';
 
 type SocialLink = {
@@ -79,10 +78,6 @@ const { profile, title = `${profile.name} | ${profile.title}` } = Astro.props as
     <main class="relative z-10">
       <slot />
     </main>
-
-    <div class="relative z-10">
-      <Footer client:load name={profile.name} socialLinks={profile.socialLinks} />
-    </div>
 
     <script is:inline>
       (function () {

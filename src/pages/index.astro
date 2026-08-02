@@ -1,9 +1,11 @@
 ---
+import Navbar from '../components/Navbar.astro';
 import Heatmap from '../components/react/Heatmap';
 import Terminal from '../components/react/Terminal';
 import Hero from '../components/vue/Hero.vue';
 import ProfileSidebar from '../components/vue/ProfileSidebar.vue';
 import SkillCard from '../components/vue/SkillCard.vue';
+import Footer from '../components/vue/Footer.vue';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import profile from '../data/profile.json';
 import projects from '../data/projects.json';
@@ -16,8 +18,10 @@ type Skill = {
 ---
 
 <BaseLayout profile={profile}>
-  <div class="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 pt-12 pb-5 sm:px-6 sm:pt-20 lg:block lg:pr-[292px]">
-    <div class="space-y-4 lg:fixed lg:right-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))] lg:top-[49px] lg:z-20" data-entrance>
+  <Navbar />
+
+  <div class="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 pt-[88px] pb-5 sm:px-6 sm:pt-20 lg:block lg:pt-24 lg:pr-[292px]">
+    <div class="space-y-4 lg:fixed lg:right-[max(1.5rem,calc((100vw-72rem)/2+1.5rem))] lg:top-[88px] lg:z-20" data-entrance>
       <ProfileSidebar client:load profile={profile} />
       <div class="hidden w-[220px] mx-auto lg:block">
         <Terminal client:only="react" />
@@ -25,8 +29,8 @@ type Skill = {
     </div>
 
     <div class="min-w-0 space-y-5">
-      <section class="matcha-signature-wrap" aria-label="This is Matcha" data-entrance>
-        <svg class="matcha-signature" viewBox="0 0 1060 220" role="img" aria-hidden="true">
+      <section id="top" class="matcha-signature-wrap" aria-label="This is Matcha" data-entrance>
+        <svg class="matcha-signature" data-parallax="10" viewBox="0 0 1060 220" role="img" aria-hidden="true">
           <defs>
             <linearGradient id="matcha-signature-ink" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#ff6b6b" />
@@ -73,7 +77,7 @@ type Skill = {
             <svg class="h-6 w-6 text-text transition group-hover:text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
           </a>
           <a href="#" title="赞赏支持" data-label="赞赏支持" data-qr="/qrcodes/tip.png" class="group social-qr-trigger flex h-12 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-surface hover:border-accent/50 hover:bg-surface-strong">
-            <svg class="h-6 w-6 text-text transition group-hover:text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 00-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 00-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/></svg>
+            <svg class="h-6 w-6 text-text transition group-hover:text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 00-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 00-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478-4.272l-.001-.001z"/></svg>
           </a>
           <a href="#" title="QQ" data-label="QQ" data-qr="/qrcodes/qq.png" class="group social-qr-trigger flex h-12 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-surface hover:border-accent/50 hover:bg-surface-strong">
             <svg class="h-6 w-6 text-text transition group-hover:text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.395 15.035a40 40 0 0 0-.803-2.264l-1.079-2.695c.001-.032.014-.562.014-.836C19.526 4.632 17.351 0 12 0S4.474 4.632 4.474 9.241c0 .274.013.804.014.836l-1.08 2.695a39 39 0 0 0-.802 2.264c-1.021 3.283-.69 4.643-.438 4.673.54.065 2.103-2.472 2.103-2.472 0 1.469.756 3.387 2.394 4.771-.612.188-1.363.479-1.845.835-.434.32-.379.646-.301.778.343.578 5.883.369 7.482.189 1.6.18 7.14.389 7.483-.189.078-.132.132-.458-.301-.778-.483-.356-1.233-.646-1.846-.836 1.637-1.384 2.393-3.302 2.393-4.771 0 0 1.563 2.537 2.103 2.472.251-.03.581-1.39-.438-4.673"/></svg>
@@ -138,7 +142,7 @@ type Skill = {
         </script>
       </section>
 
-      <section data-reveal style="content-visibility:auto; contain-intrinsic-size:320px;">
+      <section id="about" data-reveal>
         <Heatmap client:only="react" />
       </section>
 
@@ -146,15 +150,16 @@ type Skill = {
         <Hero client:load />
       </section>
 
-      <section id="projects" class="pb-10" data-reveal>
-        <div class="mb-5">
+      <section id="projects" class="pb-10">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow">Projects</span>
           <h2 class="mt-3 text-2xl font-extrabold tracking-tight text-text text-balance sm:text-3xl section-title"><span class="emoji-lg">🗑️</span> 我的垃圾项目</h2>
         </div>
 
-        <div class="grid gap-5 xl:grid-cols-2">
+        <div class="grid gap-5 xl:grid-cols-2" data-reveal-stagger>
           {
             projects.filter((project) => project.title.includes('MindType')).map((project) => (
-              <article class="liquid-surface liquid-hover relative rounded-2xl p-3 sm:p-5 flex flex-col gap-4">
+              <article class="liquid-surface liquid-hover relative rounded-2xl p-3 sm:p-5 flex flex-col gap-4" data-reveal-item data-spotlight>
                 <a href="https://mindtype.cn" class="mindtype-card-link" aria-label="访问 MindType 项目官网" target="_blank" rel="noreferrer"></a>
                 <div class="flex items-start justify-between gap-4">
                   <h3 class="min-w-0 flex-1 text-2xl font-semibold text-text sm:text-3xl">{project.title}</h3>
@@ -188,12 +193,13 @@ type Skill = {
         </div>
       </section>
 
-      <section data-reveal>
-        <div class="mb-5">
+      <section id="skills">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow">Stack</span>
           <h2 class="mt-3 text-2xl font-extrabold tracking-tight text-text text-balance sm:text-3xl section-title"><span class="emoji-lg">⚡️</span> 技术栈</h2>
         </div>
 
-        <div class="grid grid-cols-8 gap-2 lg:grid-cols-10">
+        <div class="grid grid-cols-8 gap-2 lg:grid-cols-10" data-reveal-stagger>
           {
             (skills as Skill[]).map((skill) => (
               <SkillCard name={skill.name} logo={skill.logo} />
@@ -204,47 +210,16 @@ type Skill = {
       </div>
   </div>
 
+  <div id="contact" class="relative z-10">
+    <Footer client:load name={profile.name} socialLinks={profile.socialLinks} />
+  </div>
+
   <script>
-    import { gsap } from 'gsap';
-    import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!prefersReduced) {
-      gsap.registerPlugin(ScrollTrigger);
-      ScrollTrigger.config({ ignoreMobileResize: true });
-
-      // 进入网页过渡动画：遮罩揭开 + 首屏内容错峰淡入
-      const entrance = document.querySelector('#page-entrance');
-      if (entrance) {
-        const bits = gsap.utils.toArray('[data-entrance]');
-        const tl = gsap.timeline({
-          onComplete: () => { entrance.classList.add('is-done'); }
-        });
-        // 遮罩停留片刻后淡出（用 autoAlpha 同时控制 opacity + visibility）
-        tl.to(entrance, { autoAlpha: 0, duration: 0.7, ease: 'power2.inOut', delay: 0.5 });
-        // 内容在遮罩揭开的同时错峰淡入上浮（position 参数 "-=0.25" 与淡出重叠）
-        if (bits.length) {
-          tl.from(bits, { autoAlpha: 0, y: 16, duration: 0.9, ease: 'power2.out', stagger: 0.12 }, '-=0.25');
-        }
-        tl.set(entrance, { display: 'none' });
-      }
-
-      const targets = gsap.utils.toArray<HTMLElement>('[data-reveal]');
-      targets.forEach((el) => {
-        gsap.from(el, {
-          opacity: 0,
-          y: 16,
-          duration: 0.9,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 88%',
-            toggleActions: 'play none none none'
-          }
-        });
-      });
+    import { initAnimations } from '../scripts/animations';
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAnimations, { once: true });
+    } else {
+      initAnimations();
     }
-
   </script>
 </BaseLayout>

@@ -1,0 +1,30 @@
+---
+const links = [
+  { href: '#top', label: '首页' },
+  { href: '#about', label: '关于' },
+  { href: '#projects', label: '项目' },
+  { href: '#skills', label: '技术栈' },
+];
+---
+
+<header class="site-nav" data-nav>
+  <div class="site-nav__inner">
+    <a href="#top" class="site-nav__brand" data-magnetic="0.2" aria-label="回到顶部">
+      <span class="site-nav__brand-mark">抹</span>
+      <span>抹茶味的琴</span>
+    </a>
+
+    <nav class="site-nav__links" aria-label="主导航">
+      {
+        links.map((l) => (
+          <a href={l.href} class="site-nav__link" data-nav-link>
+            <span>{l.label}</span>
+            <span class="site-nav__underline" aria-hidden="true"></span>
+          </a>
+        ))
+      }
+    </nav>
+
+    <a href="#contact" class="site-nav__cta" data-magnetic="0.35">联系我</a>
+  </div>
+</header>
