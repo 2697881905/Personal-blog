@@ -3,8 +3,15 @@
     "title": "MindType恋爱人格测试",
     "description": "基于RuoYi框架开发的情感测试网站",
     "logo": "/logos/mindtype.svg",
+    "link": "https://mindtype.cn",
     "gitee": "https://gitee.com/bai-yi-fei/mind-type",
     "tags": ["Java", "SpringBoot", "MyBatis", "MySQL"]
+  },
+  {
+    "title": "有据",
+    "description": "基于 HarmonyOS NEXT 原生开发的社区应用，支持结构化帖子、关注推荐流与消息推送。",
+    "link": "https://youju.chat",
+    "tags": ["HarmonyOS", "ArkTS", "Node.js", "MySQL"]
   },
   {
     "title": "校园任务协作平台",

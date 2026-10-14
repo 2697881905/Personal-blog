@@ -158,9 +158,9 @@ type Skill = {
 
         <div class="grid gap-5 xl:grid-cols-2" data-reveal-stagger>
           {
-            projects.filter((project) => project.title.includes('MindType')).map((project) => (
+            projects.filter((project) => project.title.includes('MindType') || project.title.includes('有据')).map((project) => (
               <article class="liquid-surface liquid-hover relative rounded-2xl p-3 sm:p-5 flex flex-col gap-4" data-reveal-item data-spotlight>
-                <a href="https://mindtype.cn" class="mindtype-card-link" aria-label="访问 MindType 项目官网" target="_blank" rel="noreferrer"></a>
+                <a href={project.link || project.gitee} class="mindtype-card-link" aria-label={`访问 ${project.title}`} target="_blank" rel="noreferrer"></a>
                 <div class="flex items-start justify-between gap-4">
                   <h3 class="min-w-0 flex-1 text-2xl font-semibold text-text sm:text-3xl">{project.title}</h3>
                   {project.logo && (
@@ -180,12 +180,12 @@ type Skill = {
                   ))}
                 </div>
                 <a
-                  href={project.gitee}
+                  href={project.gitee || project.link}
                   class="mindtype-gitee mt-1 inline-flex items-center text-sm font-semibold text-accent transition hover:text-text hover:underline hover:underline-offset-4"
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Gitee
+                  {project.gitee ? 'Gitee' : '官网'}
                 </a>
               </article>
             ))
