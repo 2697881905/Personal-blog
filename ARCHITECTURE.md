@@ -1,217 +1,220 @@
-# 作品集站点技术架构说明
+# 站点架构与动效系统
 
-> 项目路径：`/Users/itxiaobai/Mine/my-dev-portfolio`
-> 文档版本：v1.0 · 适用代码版本 Astro 4.16.18
+## 1. 设计意图
 
-本文档面向开发者，说明该个人技术主页的整体技术架构、模块划分、渲染策略与设计系统，便于后续维护、扩展与性能调优。
+这不是把所有元素都加一遍淡入，而是把“运动”建成一套有因果的技术叙事：
 
----
+- **空间连续**：文章编号、封面、标题、日期与阅读时长在列表与详情之间保持同一身份，按 0–80ms 的次序依次起飞。
+- **滚动即时间轴**：请求从 Client 到 Response 的过程由滚动位置驱动，滚回即倒放。
+- **文字是结构**：标题按词/字拆分入场，但屏幕阅读器仍读取完整语义。
+- **运动有层级**：Lenis 负责滚动惯性，GSAP 负责场景编排，View Transitions / Flip 负责身份延续。
+- **速度即质感**：跑马灯、列表倾斜和章节进度共用 ScrollTrigger 的滚动速度，快滚时整体“受力”，停下后回正。
+- **一次强反相**：首页中段从近黑切到奶油纸面，用 280vh 的宣言章节制造呼吸和对比，而不是整页一个色温。
+- **技术极客而非产品官网**：终端、路径、日志行、请求追踪、等宽元信息构成主视觉，没有营销 CTA 和卡片货架。
 
-## 1. 项目概述
+## 2. 技术架构
 
-一个零运行时后端的**静态个人技术主页**，用于集中展示个人身份、技术栈、项目与贡献热力图。核心特征：
+| 层 | 实现 | 职责 |
+| --- | --- | --- |
+| 平滑滚动 | **Lenis** `lerp: 0.1` | 与 GSAP ticker 同步；触摸端保留系统滚动 |
+| 滚动编排 | **GSAP + ScrollTrigger** | 可逆的段落、文字、日志行、请求追踪 |
+| 文本动画 | 自研 `Intl.Segmenter` 拆分 | 词/字级动画，保留完整 `aria-label` |
+| 跨页转场 | **View Transitions API** | 5 类文章共享元素 + 品牌，`view-transition-class` 分组编排 |
+| 页内共享 | **GSAP Flip** | 项目、二维码、图片、代码全屏 |
+| 速度反馈 | **ScrollTrigger velocity + quickTo** | 跑马灯变速、列表 skew、缩略图 3D tilt |
+| 光标 | 原生指针（可选技术指针） | 默认不接管系统光标；动作提示显示在元素原位 |
+| 代码高亮 | **Shiki `vesper`** | 暖色语法，避免绿色与整体色板冲突 |
+| 框架 | **Astro 4.16 + TypeScript** | 静态生成、文件路由、内容集合 |
 
-- **构建输出**：纯静态站点（`output: 'static'`，Astro SSG），无服务器端逻辑，可直接托管于任意静态 CDN。
-- **混合岛屿架构**：在 Astro 静态外壳内，同时嵌入 **Vue 3** 与 **React 18** 两类交互岛屿，按需水合（Hydration）。
-- **设计语言**：深色「液态玻璃（liquid glass）」风格，抹茶金（`#d9b382`）作为强调色，搭配渐变签名手写体动画。
-- **部署目标**：Netlify，构建产物为 `dist/` 目录。
+```text
+src/scripts/
+├── motion.ts          # 首屏 3D 标题、宣言章节、跑马灯、速度倾斜与正文场景
+├── trace.ts           # 滚动驱动的请求生命周期，正反向 scrub
+├── smooth.ts          # Lenis 生命周期与锚点滚动
+├── cursor.ts          # 可选技术指针与配置项（默认不启用）
+├── reading.ts         # 全局滚动进度、章节 rail、文章目录
+├── palette.ts         # Ctrl K 命令面板
+├── terminal.ts        # 可输入终端
+├── filters.ts         # 标签筛选
+├── interactions.ts    # Flip 浮层、灯箱、代码块
+├── motion-control.ts  # system / full / low 三态动效偏好
+└── transitions/       # shared-id 约定、Flip、旧浏览器降级
+```
 
----
+### 2.1 色彩系统
 
-## 2. 技术栈
+| Token | 值 | 用途 |
+| --- | --- | --- |
+| `--bg` | `#0e100f` | 近黑纸面，不是纯黑，保留一点温度 |
+| `--text` | `#fffce1` | 奶油白正文与巨型标题 |
+| `--accent` | `#ff8709` | 余烬橙：路径、编号、高亮、进度 |
+| `--violet` | `#9d95ff` | 紫外：次级强调、封面副标题、宣言光晕 |
+| `--cyan` | `#00bae2` | 青色：状态与冷色平衡 |
+| `--pink` | `#fec5fb` | 粉色：只出现在光球和极少量点缀 |
+| `--signal` | `#9d95ff` | 项目 `case_xx` 与错误态 |
+| `--border` | `rgba(255,252,225,0.12)` | 奶油白低对比分隔线 |
 
-| 层 | 选型 | 版本 | 职责 |
+奶油白同时承担“纸”和“字”两种角色：主页宣言区整段反相为奶油底、墨色字，形成全站唯一的高亮章节。
+
+### 2.2 比例系统
+
+所有尺寸用 `clamp()` 随视口温和缩放，1440 以下基本保持原设计，1920 起整体放大：
+
+| 尺寸 | 规则 | 1440 | 1920 |
 | --- | --- | --- | --- |
-| 框架核心 | **Astro** | 4.16.18 | 静态生成、文件路由、岛屿编排 |
-| 岛屿 (Vue) | **@astrojs/vue** + Vue | 3.5.x | Hero / ProfileSidebar / SkillCard / Footer |
-| 岛屿 (React) | **@astrojs/react** + React | 18.3.x | Terminal / Heatmap 交互组件 |
-| 样式 | **Tailwind CSS** | 3.4.x | 原子类 + 自定义设计令牌 |
-| 动画 | **GSAP** | 3.12.x | 进场遮罩、滚动揭示、签名书写动画 |
-| 语言 | **TypeScript** | 5.7.x | 严格模式（`astro/tsconfigs/strict`） |
-| 字体 | Outfit / Sora / JetBrains Mono | — | 通过 Google Fonts 引入 |
-| 部署 | Netlify | — | 静态托管 + 构建流水线 |
+| 内容列 | `clamp(1180px, 82vw, 1440px)` | 1180 | 1440 |
+| 主标题 | `clamp(56px, 7.6vw, 132px)` | 108 | 132 |
+| 终端列 | `clamp(470px, 31vw, 540px)` | 470 | 540 |
+| 章节标题 | `clamp(34px, 3.8vw, 62px)` | 54 | 62 |
+| 跑马灯 | `clamp(28px, 4.2vw, 72px)` | 60 | 72 |
+| 宣言 | `clamp(34px, 5.4vw, 96px)` | 78 | 96 |
+| 日志标题 | `clamp(24px, 1.5vw, 28px)` | 24 | 28 |
 
-依赖均锁定于 `package.json`，`npm install` 经 `.npmrc` 指向华为云镜像以保证安装速度。
+矮屏（高度 ≤820px）会把首屏上下留白压到 88/64px，保证 1366×768 也能在首屏看到跑马灯。
 
----
+首屏背景是贯穿横宽的极光渐变层（`left: calc(50% - 50vw); width: 100vw`），紫/橙/青/粉四团光晕在任意宽度下都铺满横向，随指针做轻微视差；跑马灯两端用与底色同色的渐变叠层渐隐（不依赖 mask），左右边缘实测峰值亮度 322/730 与 132/730。
 
-## 3. 架构设计
+## 3. 动效系统的四层模型
 
-### 3.1 渲染模型：Astro Islands
+### 3.1 时钟层：Lenis
 
-站点主体为静态 HTML（首屏内容在构建期生成），仅对需要交互的区块启用客户端框架。
+完整动效模式下启用，统一桌面滚轮与锚点滚动的速度感。触摸设备使用 `syncTouch: false`，保留原生惯性，避免手势劫持。
 
-```
-BaseLayout.astro (外壳：<head> / 背景视频层 / 遮罩 / <slot/> / Footer)
-└── index.astro (页面编排：数据驱动 + 岛屿装配)
-    ├── ProfileSidebar   client:load   (Vue)   侧边个人卡片
-    ├── Terminal         client:only   (React) 伪终端交互（仅桌面端渲染）
-    ├── Heatmap          client:only   (React) 贡献/钢琴热力图
-    ├── Hero             client:load   (Vue)   主标题区
-    ├── SkillCard × N    (Vue)         技术栈图标（静态渲染）
-    └── Footer           client:load   (Vue)   页脚社交链接
-```
+### 3.2 场景层：GSAP + ScrollTrigger
 
-### 3.2 水合策略（Hydration）
+- 首屏是一段自上而下的 timeline：路径标签、标题、正文、终端、光标依次进入；标题字符从 `rotateX(-82°)` 翻起覆盖 `expo.out`。
+- 页面标题和段落标题按词拆分，`expo.out` 进入；英文单词不会被任意断行。
+- 日志行使用 row timeline：行位移、封面 `clip-path`、文本次级元素分段跟随。
+- 宣言章节是 280vh 的 sticky 场景：22 个词从 18% 透明度逐字点亮，进度线、编号和背景光晕由同一 scrub 时间轴驱动。
+- 两条跑马灯用一个 `xPercent: -50` 无限循环，`ScrollTrigger.getVelocity()` 实时改变 `timeScale`，快滚时加速、停下回到常速。
+- 请求追踪使用 `scrub: 0.9`，滚动位置就是时间轴进度，天然支持正放、暂停和倒放。
 
-| 指令 | 使用位置 | 行为 |
-| --- | --- | --- |
-| `client:load` | Footer、ProfileSidebar、Hero | 页面加载后立即水合，交互立即可用 |
-| `client:only="react"` | Terminal、Heatmap | 不在服务端渲染，仅客户端挂载；避免 React 组件被 SSR 后产生不一致，且节省首屏 HTML 体积 |
+### 3.3 身份层：View Transitions + Flip
 
-`Terminal` 与 `Heatmap` 被包裹在 `lg:block` 容器内，仅在 `≥1024px` 视口渲染，移动端不加载该 React 岛屿，降低移动端 JS 负担。
+跨页交付编号、封面、标题、日期与阅读时长；页内通过移动真实 DOM 节点实现项目、二维码、图片和代码浮层。两者各司其职，同一元素不同时运行两套机制。共享元素本身在转场期间不再播放入场动画，避免二次淡入和叠影。
 
-### 3.3 文件路由
+转场按 `view-transition-class` 分五组：`cover` 先走 620ms 弧线，`index` 在 40ms 后放大，`title` 在 80ms 后上移，日期与阅读时长（`chip`）从 0ms 起就离开元信息行，避免被放大的编号压住。摘要与标签不再做几何飞行，改为落地后由 GSAP 做 520ms、40ms stagger 的跟随淡入，因此不会横穿封面。
 
-- `src/pages/index.astro` 为唯一路由 `/`，构建后输出 `dist/index.html`。
-- 遵循 Astro 约定式路由，无额外路由配置。
+### 3.4 反馈层：细节动效
 
----
+默认使用系统指针；日志行 hover 在行尾显示 `READ`，项目行在原位显示 `OPEN`，不依赖鼠标跟随层。桌面端缩略图随指针做最多 10° / 7° 的 3D 倾斜；列表整体按滚动速度做最多 2.2° 的 skew，停止滚动后 500ms 回正。可选技术指针只在 `<html data-cursor="technical">` 时启用，并默认采用 1:1 坐标更新，不做插值。按钮按压、滚动进度、章节 rail 和目录高亮控制在 120–280ms。
 
-## 4. 目录结构
+**指针配置**：`CURSOR_OPTIONS.followDuration` 默认 `0`（精确跟随），`hideNative` 控制系统指针是否隐藏。任意元素通过 `data-cursor="read|open|…"` 定义技术指针的动作标签。视觉由 `--cursor-fill`、`--cursor-outline`、`--cursor-accent`、`--cursor-label-gap` 四个 CSS 变量控制。
 
-```
-my-dev-portfolio/
-├── astro.config.mjs        # Astro 集成配置（vue/react/tailwind）
-├── tailwind.config.cjs     # 设计令牌与主题扩展
-├── tsconfig.json           # 严格 TS 配置
-├── netlify.toml            # 构建与发布配置
-├── .npmrc                  # 镜像源
-├── public/                 # 静态资源（视频、字体、二维码、favicon）
-│   ├── background.mp4      # 背景视频（H.264，约 583KB）
-│   ├── background-poster.png
-│   └── qrcodes/            # 微信/QQ/赞赏二维码
-├── src/
-│   ├── layouts/
-│   │   └── BaseLayout.astro     # 全局外壳（视频层、遮罩、字体、脚本）
-│   ├── pages/
-│   │   └── index.astro          # 主页编排
-│   ├── components/
-│   │   ├── vue/                 # Vue 岛屿组件
-│   │   │   ├── Hero.vue
-│   │   │   ├── ProfileSidebar.vue
-│   │   │   ├── SkillCard.vue
-│   │   │   └── Footer.vue
-│   │   └── react/               # React 岛屿组件
-│   │       ├── Terminal.tsx
-│   │       └── Heatmap.tsx
-│   ├── data/                    # 内容数据（JSON，驱动渲染）
-│   │   ├── profile.json
-│   │   ├── projects.json
-│   │   └── skills.json
-│   ├── styles/
-│   │   └── global.css           # 玻璃拟态类、动画、视频兼容层
-│   └── env.d.ts
-```
+## 4. `data-shared-id` 约定
 
----
+| 类型 | 示例 |
+| --- | --- |
+| 品牌 | `site:brand` |
+| 文章编号 | `post:mysql-index-design:index` |
+| 文章封面 | `post:mysql-index-design:cover` |
+| 文章标题 | `post:mysql-index-design:title` |
+| 发布日期 | `post:mysql-index-design:date` |
+| 阅读时长 | `post:mysql-index-design:read` |
+| 筛选 | `filter:tag:java` |
+| 项目 | `project:mindtype:surface`、`:title`、`:logo`、`:index` |
+| 图片 | `media:post-slug:0` |
+| 代码 | `code:post-slug:0:surface` |
+| 二维码 | `qr:wechat:trigger` |
 
-## 5. 数据层
+每个 `data-shared-id` 在单个页面中必须唯一。共享元素移动时使用占位节点保持布局，禁止仅用 opacity/scale 冒充。
 
-内容完全由 `src/data/*.json` 驱动，页面通过 Astro frontmatter 导入并渲染，实现**内容与视图分离**：
+## 5. 共享元素转场地图
 
-- `profile.json`：姓名、头衔、简介、标签、社交链接。
-- `projects.json`：项目列表（当前 3 条），主页通过 `title.includes('MindType')` 过滤展示重点项。
-- `skills.json`：技术栈条目（约 27 项，含 `name` / `logo` 字段）。
+| 源 → 目标 | 共享 ID | 转场与参数 | 次级动效 | 反向路径 |
+| --- | --- | --- | --- | --- |
+| 日志编号 → 详情大编号 | `post:{slug}:index` | VT `index` 组：延迟 40ms，580ms，`expo.out` | 字号 9px → 158px，填充变描边，中段旋转 -4° 后回正 | 浏览器返回自动反演 |
+| 日志缩略图 → 文章封面 | `post:{slug}:cover` | VT `cover` 组：0ms，620ms | 从 116×73 放大到 100vw×16:9（1440 下约 1425×801），中段上移 42px、放大 4%、亮度回落 | 返回同一几何对 |
+| 日志标题 → 文章标题 | `post:{slug}:title` | VT `title` 组：延迟 80ms，520ms | 上移 26px、轻微过冲回正；其余日志行 200ms 淡出下沉 | 返回重放 |
+| 日期 / 阅读时长 → 文章元信息 | `post:{slug}:date`、`:read` | VT `chip` 组：0ms，320ms | 先离开编号的放大区域，带 18px 上移与 scale 0.86 回正 | 返回重放 |
+| 文章列表 → 详情 / 返回 | `post-list` | 去程 180ms，返回 210ms | 滚动位置恢复 | 浏览器 history |
+| 品牌 → 新页品牌 | `site:brand` | VT 620ms，`brand` 组关闭自身动画 | 导航固定 | 自动反演 |
+| 项目行 → 工程记录浮层 | `project:{id}:surface` | Flip 400ms 展开 / 280ms 返回；`expo.out + absolute + nested` | 编号长成 180px 水印，详情行 420ms stagger | 同一节点移回占位元素 |
+| 社交图标 → 二维码 | `qr:{id}:trigger` | Flip 280ms | 二维码内容 160ms 淡入 | 关闭反向 |
+| 标签 → 筛选栏 | `filter:tag:{tag}` | Flip 220ms | 不匹配行 120ms 淡出 | clear / 浏览器返回 |
+| 图片 → 灯箱 | `media:{slug}:{index}` | Flip 280ms | 圆角、边框同步 | 关闭反向 |
+| 代码块 → 全屏 | `code:{slug}:{index}:surface` | Flip 280ms | 工具栏与行号一起移动 | 关闭反向 |
+| 复制 → 完成态 | 不共享 | 即时文本切换 | 1600ms 后恢复 | 不适用 |
 
-修改文案或项目无需触碰组件逻辑，直接编辑 JSON 即可。
+摘要和标签不做几何飞行：它们与封面、编号的路径重叠，飞行中会横穿封面。二者在落地后由 GSAP 以 520ms、40ms stagger 跟随淡入，作为转场的收尾而不是第二段飞行。
 
----
+## 6. 动效参数表
 
-## 6. 样式与设计系统
+| 场景 | 触发 | 属性 / 工具 | 时长、缓动与节奏 |
+| --- | --- | --- | --- |
+| 平滑滚动 | 滚轮 | Lenis + `gsap.ticker` | `lerp 0.1`；触摸端不启用 |
+| 首屏标题 | 首次加载 | 字符 `rotateX(-82°)` + y + opacity | 1050ms，stagger 45ms，`expo.out` |
+| 首屏正文元素 | 首次加载 | y 18px + opacity | 620ms，stagger 60ms |
+| 终端入场 | 首次加载 | `clip-path` + x/y | 1100ms，`expo.out` |
+| 首屏光球 | 首次加载 + 指针 | 缩放淡入；`quickTo` 位移；9s yoyo 漂浮 | 1800ms 入场；视差 900ms |
+| 章节标题 | 滚动进入 | 字符 mask + y + rotate | 720ms，stagger 19ms |
+| 日志行 | 滚动进入 | y 22px、封面 clip-path、文本 10px | 620 / 780 / 420ms |
+| 项目、关于区块 | 滚动进入 | y 20px + opacity | 620ms；`toggleActions` 可逆 |
+| 宣言章节 | 滚动 | 22 个词 opacity + y；进度线；光晕位移 | 280vh，`scrub 0.55`，词 stagger 140ms |
+| 技术栈跑马灯 | 常驻 + 滚动速度 | `xPercent: -50` 循环 + `timeScale` | 34s 基础周期；滚动时最高 3.4× |
+| 页脚跑马灯 | 常驻 + 滚动速度 | 同上，描边字 | 26s 基础周期 |
+| 列表速度倾斜 | 任意滚动 | `skewY` quickTo | ±2.2°，500ms 回正 |
+| 缩略图倾斜 | 指针悬停 | `rotationX/Y` quickTo | ±7° / ±10°，500ms |
+| 请求追踪 | 滚动 | 5 段状态 + 进度线 + 代码行 | 255vh 滚动距离，`scrub 0.9` |
+| 正文标题 / 引用 | 滚动进入 | y 22px + opacity | 650ms，可逆 |
+| 项目浮层 | 点击 | Flip 尺寸/位置/圆角 | 展开 400ms `expo.out`；返回 280ms `power3.inOut` |
+| 项目详情 | 展开后 | y 16px + opacity，逐条 | 420ms，stagger 45ms |
+| 路由转场 | 站内导航 | View Transitions，按 class 分组 | 封面 620ms、编号 580ms、标题 520ms、chip 320ms；延迟 0/40/80/0ms；桌面 `expo.out`，移动 420ms |
+| 文章收尾 | 转场落地后 | 摘要与标签 y 16px + opacity | 520ms，stagger 40ms |
+| 可选技术指针 | 显式启用 | 1:1 `x/y` 定位；动作标签 | 0ms 跟随；按压 100–160ms |
+| 顶栏滚动进度 | 任意滚动 | `scaleX` | 1:1 跟随，无缓动 |
+| 章节 rail | 首页滚动 | 当前区块高亮 | 160ms |
+| 目录联动 | 标题越过视口上沿 | 边框与颜色 | 160ms |
+| 命令面板 | Ctrl K | opacity + scale + y | 140ms |
+| 复制链接 / 代码 | 点击 | 文本状态 | 即时，1600ms 恢复 |
 
-### 6.1 设计令牌（Tailwind + CSS 变量双轨）
+## 7. 正向与反向链路
 
-`tailwind.config.cjs` 定义语义色板，`global.css` 通过 `:root` CSS 变量同步，便于原生 CSS 与 Tailwind 共用：
+1. **路由链**：`ViewTransitions` 自动保留旧/新快照，返回时同一组 name 反向插值；旧浏览器由 `pagehide` 保存矩形后反向恢复。
+2. **浮层链**：打开前捕获源节点几何，关闭时先捕获当前几何，再把真实节点移回占位元素并反向 Flip。
+3. **滚动叙事链**：请求追踪是由 `scrub` 驱动的唯一时间轴；从 0→1 正向播放，从 1→0 倒放。自动化验证中 `03 → 05 → 03`，状态、计数器和代码高亮同步回退。
+4. **段落链**：标题、日志行和 reveal 使用 `toggleActions: play none none reverse`，滚回触发点上方会反向收束。
+5. **中断清理**：快速重复触发时 `Flip.killFlipsOf`、`gsap.killTweensOf`、`AbortController`、`gsap.context().revert()` 负责终止旧链，不叠加。
 
-| 令牌 | 值 | 用途 |
-| --- | --- | --- |
-| `background` / `--bg` | `#0e0f13` | 页面底色（深色） |
-| `card` | `#12141a` | 卡片表面 |
-| `accent` / `--accent` | `#d9b382` | 抹茶金强调色 |
-| `text` / `muted` | `#e9ebef` / `#9aa1ac` | 主/次文字 |
-| `border` | `rgba(255,255,255,.10)` | 描边（玻璃边缘高光） |
+## 8. 文字动画与无障碍
 
-字体栈：`sans → Outfit/PingFang SC`；标题 `section-title → Sora`；等宽 `mono → JetBrains Mono`。
+- `Intl.Segmenter` 按词拆分，再按字建立 mask；英文单词不会被任意断行。
+- 原元素写入完整 `aria-label`，拆分字符统一 `aria-hidden="true"`，屏幕阅读器不会逐字朗读。
+- 低动效模式不拆分 / 不隐藏文本；完整模式下若切换为低动效，`context.revert()` 会清除位移，文本保持可见。
+- `prefers-reduced-transparency`、`prefers-contrast` 与焦点环继续生效。
 
-### 6.2 液态玻璃组件类
+## 9. 动效偏好与降级
 
-`global.css` 定义一套可复用玻璃质感类，统一毛玻璃与内阴影：
+- 右上角 `motion:auto|full|low` 三态切换，存于 `localStorage`。
+- `auto` 跟随系统；系统启用减少动态效果时，首屏出现 `enable full motion` 提示。
+- `full` 显式覆盖系统低动效：启用 Lenis、GSAP 场景和完整共享转场；原生指针始终优先。
+- `low` 关闭位移、拆分、Lenis、跑马灯、列表倾斜、缩略图 tilt、宣言逐词点亮和 sticky 请求追踪；保留 120ms 淡入以及功能性滚动进度 / 章节定位。
+- 无 JavaScript 时内容仍然完整可见；所有场景动画只增强，不承载内容。
 
-- `.liquid-surface` / `.liquid-surface-strong` / `.liquid-surface-flat`：`backdrop-filter: blur(18px) saturate(195%)` + 内高光 + 多层阴影。
-- `.liquid-hover`：悬停上浮（`translateY(-4px)`）+ Apple 缓动 `--ease-apple`。
-- `.liquid-chip` / `.liquid-nav` / `.liquid-footer` / `.liquid-avatar`：标签、导航、页脚、头像变体。
+## 10. 性能边界
 
-### 6.3 签名动画
+- 动画属性限定为 `transform`、`opacity`、`clip-path`；不逐帧改布局尺寸。
+- 关于区块的 reveal 只在进入/离开时切换，不做持续循环。
+- 请求追踪只使用一个 scrub 时间轴，节点数量固定为 5。
+- 两条跑马灯和一个宣言场景是主要的持续动效；跑马灯只改 `xPercent`，宣言只改文字的 `opacity/y`。
+- 全幅封面是 1600×900 的 SVG，`object-fit: cover` 在 16:9 容器内不产生二次裁切；7 张封面共约 60 KB。
+- Lenis 在页面切换前销毁；ScrollTrigger 由 `gsap.context` 统一清理；速度监听只有一个全局实例。
+- 无粒子、无全屏滚动劫持、无 WebGL、无多层滚动视差。
 
-`matcha-signature`（SVG 文本）通过 `stroke-dasharray` 描边书写 + 渐变填充 + 高光扫光，配合 `@keyframes` 完成一次性入场（8s，非无限循环，遵循克制原则）。
+## 11. 验证记录
 
----
-
-## 7. 动画系统
-
-由 `index.astro` 内的 `<script>`（客户端模块）驱动 GSAP：
-
-- **进场遮罩**：`#page-entrance` 旋转环 + 遮罩淡出（`autoAlpha`），随后首屏 `[data-entrance]` 元素错峰上浮淡入。
-- **滚动揭示**：`[data-reveal]` 区块经 `ScrollTrigger`（`start: 'top 88%'`）在滚入视口时淡入上浮。
-- **无障碍降级**：脚本首行检测 `prefers-reduced-motion: reduce`，命中则**完全跳过** GSAP 注册与动画，CSS 层亦通过媒体查询禁用相关 `animation` 并直接显示终态。
-
----
-
-## 8. 背景视频跨浏览器兼容
-
-`BaseLayout.astro` 中的视频层针对国内定制浏览器（荣耀、微信 X5/TBS、UC）做了专项处理（详见 `global.css` 注释）：
-
-1. **层叠上下文逃逸**：Tailwind `scale-110` 的 `transform` 会创建独立层叠上下文，使视频逃逸 `z-0` 容器跑到顶层——改用**尺寸放大 + 负偏移（`top/left: -6%; width/height: 112%`）**而非 `transform`。
-2. **inline 默认显示**：视频默认 `display:inline` 在部分内核导致绝对定位失效，已显式 `.bg-video { display:block }`。
-3. **微信 X5 内核**：添加 `x5-playsinline` / `x5-video-player-type="h5"` / `x5-video-player-fullscreen="false"` / `x5-video-orientation="portrait"` 防止被劫持为系统播放器；`preload="auto"` 触发加载；通过 `WeixinJSBridgeReady` 事件与 `touchstart/click` 手势兜底主动 `play()`。
-4. **降级**：`@supports not (object-fit: cover)` 时回退为拉伸填充。
-
----
-
-## 9. 部署（Netlify）
-
-`netlify.toml`：
-
-```toml
-[build]
-  command = "npm run build"
-  publish = "dist"
-
-[build.environment]
-  NODE_VERSION = "18"
-```
-
-- 构建命令关闭 Astro 遥测（`ASTRO_TELEMETRY_DISABLED=1`）。
-- 发布目录为 `dist/`，无服务端函数。
-- 背景视频与二维码等静态资源置于 `public/`，构建时原样拷贝。
-
----
-
-## 10. 性能与可访问性要点
-
-### 性能
-- **零运行时后端** + 静态生成，TTFB 极低，首屏 HTML 体积小。
-- **岛屿化水合**：仅交互组件加载框架 JS；`client:only` 组件不在服务端渲染，节省 HTML 体积。
-- **响应式岛屿**：桌面端专属的 React 组件（`Terminal`/`Heatmap`）在移动端不渲染，降低移动端 JS 与算力开销。
-- **资源优化**：背景视频经压缩（约 583KB，H.264）；字体走 `display=swap` 避免阻塞渲染；`content-visibility:auto` 用于长区块（`Heatmap` 容器）延迟离屏渲染。
-
-### 可访问性
-- 语义化标签 `<main>` / `<section>` / `aria-label`；社交链接、二维码弹窗均有 `role` 与 `aria-hidden` 管理。
-- 二维码弹窗支持 `Escape` 关闭、点击遮罩关闭，并临时锁定 `body` 滚动。
-- 全站尊重 `prefers-reduced-motion`，关闭所有装饰性动画。
-- 弹窗挂载到 `<body>` 下避免祖先 `transform` 导致 `position:fixed` 失效。
-
----
-
-## 11. 后续优化建议
-
-1. **字体自托管**：当前依赖 Google Fonts 外链，国内访问不稳定；建议自托管 `Outfit/Sora/JetBrains Mono` 并 `preload` 关键字体，消除外部阻塞。
-2. **图片响应式**：`MindType` logo 已声明 `width/height`，建议补充 `srcset` 适配高分屏。
-3. **React 岛屿体积**：`Heatmap` 含随机生成逻辑，可考虑 `React.lazy` + 动态导入进一步拆分。
-4. **Lighthouse 监控**：建立 CI 中的 Lighthouse CI，固化性能/无障碍基线（当前架构预期可达 90+）。
-5. **内容来源统一**：社交链接在 `profile.json` 与 `index.astro` 内联两处存在，建议统一抽取到数据层。
-
----
-
-**维护者**：itxiaobai · **文档生成日期**：2026-07-19
+- `npm run build`：11 个静态路由（含 404，7 篇文章）构建通过；`npm run check`：0 errors / 0 warnings / 1 hint。
+- 完整动效：首屏 6 个拆分字符、22 个宣言词、2 条跑马灯、Lenis、请求追踪与滚动进度全部启动；系统指针默认保留。
+- 请求追踪：中段 `03 / transaction`，终点 `05 / complete`，滚回中段恢复 `03 / transaction`。
+- 路由返回：文章列表滚动位置从 `574` 恢复到 `574`。
+- 共享元素：7 篇文章 × 5 类文章共享项，加上品牌与根快照，首页共 37 个转场名称、全部唯一；文章页 7 个；转场中段无旧页文字叠影。
+- 路由起势：点击后 110ms 内非目标日志行淡出下沉、目标行保留实体高亮，随后进入分组飞行；摘要和标签在落地后 520ms 跟随淡入。
+- 飞行分组实测：`cover` 620ms、`index` 580ms（延迟 40ms）、`title` 520ms（延迟 80ms）、`chip` 320ms；编号落地 184px；封面从 116×73 放大到 1425×802 后无二次淡入。
+- 宣言章节：背景 `#fffce1`，章节 rail 自动反相；中段计数 `03 / 03`，22 个词中 19 个已点亮，进度线与光晕同步。
+- 速度反馈：列表 `skewY` 最大 2.2°，停止后回到 0；缩略图悬停产生约 4° / 5° 的 3D 倾斜。
+- 低动效：`data-motion="reduced"` 下 Lenis 不启动、标题不拆分、宣言词不拆分、跑马灯 `transform: none`、请求追踪不 pin，宣言文字完整可见。
+- 指针：默认无 `.cursor` 层、无 `has-custom-cursor` 类，系统指针完全保留；`READ` / `OPEN` 作为行内 hover 提示。技术指针仅在 `data-cursor="technical"` 时启用，且为 0ms 精确跟随。
+- 项目浮层：编号放大到 180px 描边水印，详情行依次进入；关闭走 280ms 反向 Flip。
+- 响应式：1440 / 1280 / 1024 / 390 均无横向溢出；1920 内容列 1440、标题 132px、终端 540px；1536 标题 115.6px；1024 标题 76.7px；390 文章全幅封面 390px，标题 54.6px；1366×768 首屏高度 598px，跑马灯完整可见；章节 rail 仅在 ≥1400px 显示。
+- 1920 文章页：全幅封面 1905×1072，标题单行；1920 宣言三行各占一行，22 词中 19 个点亮。
+- 浏览器运行时异常：0；低动效、完整动效两种偏好均验证可切换。

@@ -1,9 +1,20 @@
 import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
-import vue from '@astrojs/vue';
+
+const site = process.env.SITE_URL || process.env.URL;
 
 export default defineConfig({
+  site,
   output: 'static',
-  integrations: [vue(), react(), tailwind()]
+  integrations: [tailwind()],
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport'
+  },
+  markdown: {
+    shikiConfig: {
+      theme: 'vesper',
+      wrap: true
+    }
+  }
 });

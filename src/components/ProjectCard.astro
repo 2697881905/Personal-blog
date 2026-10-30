@@ -1,0 +1,75 @@
+---
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  logo?: string;
+  link?: string;
+  gitee?: string;
+  tags: string[];
+  details: string[];
+}
+interface Props { project: Project; index: number; }
+const { project, index } = Astro.props;
+const primaryLink = project.link || project.gitee;
+const repoLink = project.gitee && project.gitee !== primaryLink ? project.gitee : null;
+---
+
+<article
+  class="project-card"
+  data-project-card
+  data-project-title={project.title}
+  data-shared-id={`project:${project.id}:surface`}
+  data-reveal
+  data-cursor="open"
+>
+  <span
+    class="project-card__index"
+    aria-hidden="true"
+    data-shared-id={`project:${project.id}:index`}
+  >{String(index + 1).padStart(2, '0')}</span>
+
+  <div class="project-card__content">
+    <div class="project-card__topline">
+      <h3 data-shared-id={`project:${project.id}:title`}>{project.title}</h3>
+      <span class="project-card__status">case_{String(index + 1).padStart(2, '0')}</span>
+    </div>
+    <p class="project-card__description">{project.description}</p>
+    <div class="project-card__tags">
+      {project.tags.map((tag) => <span class="tag">{tag}</span>)}
+    </div>
+    <div class="project-card__details">
+      <p class="project-card__details-label">implementation_notes</p>
+      <ul>{project.details.map((detail) => <li>{detail}</li>)}</ul>
+    </div>
+    <div class="project-card__actions">
+      <button type="button" class="text-button" data-project-open>
+        <span>open project.md</span><span aria-hidden="true">→</span>
+      </button>
+      {primaryLink && (
+        <a href={primaryLink} target="_blank" rel="noreferrer" class="text-button">
+          <span>visit</span><span aria-hidden="true">↗</span>
+        </a>
+      )}
+      {repoLink && (
+        <a href={repoLink} target="_blank" rel="noreferrer" class="text-button">
+          <span>repo</span><span aria-hidden="true">↗</span>
+        </a>
+      )}
+    </div>
+  </div>
+
+  {project.logo ? (
+    <img
+      src={project.logo}
+      alt=""
+      class="project-card__logo"
+      width="80"
+      height="80"
+      loading="lazy"
+      data-shared-id={`project:${project.id}:logo`}
+    />
+  ) : (
+    <span class="project-card__monogram" aria-hidden="true">{project.title.slice(0, 1)}</span>
+  )}
+</article>

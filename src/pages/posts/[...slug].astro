@@ -1,0 +1,204 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import profile from '../../data/profile.json';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+interface Props { post: CollectionEntry<'posts'>; }
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+const { slug, data } = post;
+const orderedPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const postIndex = orderedPosts.findIndex((entry) => entry.slug === slug);
+const postNumber = String(postIndex + 1).padStart(2, '0');
+const formatDate = (value: Date) => new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })
+  .format(value)
+  .replaceAll('/', '.');
+const date = formatDate(data.pubDate);
+const updatedDate = data.updatedDate ? formatDate(data.updatedDate) : undefined;
+const dateModified = data.updatedDate ?? data.pubDate;
+const readingTime = Math.max(1, Math.ceil(post.body.length / 500));
+const toc = headings.filter((heading) => heading.depth === 2);
+const newerPost = postIndex > 0 ? orderedPosts[postIndex - 1] : undefined;
+const olderPost = postIndex < orderedPosts.length - 1 ? orderedPosts[postIndex + 1] : undefined;
+const postUrl = Astro.site ? new URL(`/posts/${slug}/`, Astro.site).href : undefined;
+const authorUrl = profile.socialLinks.find((link) => link.label === 'GitHub')?.href;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.description,
+  datePublished: data.pubDate.toISOString(),
+  dateModified: dateModified.toISOString(),
+  inLanguage: 'zh-CN',
+  author: authorUrl
+    ? { '@type': 'Person', name: profile.name, url: authorUrl }
+    : { '@type': 'Person', name: profile.name },
+  keywords: data.tags.join(', '),
+  ...(postUrl ? { url: postUrl, mainEntityOfPage: postUrl } : {}),
+  ...(Astro.site ? { image: new URL(data.cover, Astro.site).href } : {})
+};
+---
+
+<BaseLayout
+  title={`${data.title} · 抹茶味的琴`}
+  description={data.description}
+  type="article"
+  published={data.pubDate.toISOString()}
+  updated={dateModified.toISOString()}
+  tags={data.tags}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  <article>
+    <header class="article-hero shell">
+      <div class="article-hero__top">
+        <a href="/posts/" class="article-back" data-back-link>cd ../notes</a>
+        <div class="article-hero__meta">
+          <time
+            datetime={data.pubDate.toISOString()}
+            class="article-hero__date"
+            data-shared-id={`post:${slug}:date`}
+            transition:name={`post-${slug}-date`}
+          >{date}</time>
+          <span
+            class="article-hero__read"
+            data-shared-id={`post:${slug}:read`}
+            transition:name={`post-${slug}-read`}
+          >{readingTime} min read</span>
+          {updatedDate && <span class="article-hero__updated">updated {updatedDate}</span>}
+        </div>
+      </div>
+
+      <span
+        class="article-hero__index"
+        aria-hidden="true"
+        data-shared-id={`post:${slug}:index`}
+        transition:name={`post-${slug}-index`}
+      >{postNumber}</span>
+      <h1 data-shared-id={`post:${slug}:title`} transition:name={`post-${slug}-title`}>{data.title}</h1>
+      <p class="article-hero__description">{data.description}</p>
+      <div class="article-hero__tags">
+        {data.tags.map((tag) => (
+          <a class="tag" href={`/posts/?tag=${encodeURIComponent(tag)}`}>{tag}</a>
+        ))}
+      </div>
+
+      <img
+        src={data.cover}
+        alt={data.coverAlt}
+        class="article-hero__cover"
+        width="1600"
+        height="900"
+        loading="eager"
+        decoding="async"
+        data-shared-id={`post:${slug}:cover`}
+        transition:name={`post-${slug}-cover`}
+      />
+    </header>
+
+    <div class="article-layout shell">
+      <div class="prose" data-article-body data-post-slug={slug}>
+        <Content />
+      </div>
+      {toc.length > 1 && (
+        <aside class="article-toc" aria-label="本文目录" data-article-toc>
+          <p class="article-toc__label">index.md</p>
+          <nav>
+            {toc.map((heading, index) => (
+              <a href={`#${heading.slug}`} data-toc-link>
+                <span>{String(index + 1).padStart(2, '0')}</span>{heading.text}
+              </a>
+            ))}
+          </nav>
+        </aside>
+      )}
+    </div>
+
+    {(newerPost || olderPost) && (
+      <nav class="article-adjacent shell" aria-label="相邻笔记">
+        {newerPost ? (
+          <a class="article-adjacent__link" href={`/posts/${newerPost.slug}/`}>
+            <span>newer</span>
+            <strong>{newerPost.data.title}</strong>
+          </a>
+        ) : <span />}
+        {olderPost ? (
+          <a class="article-adjacent__link article-adjacent__link--next" href={`/posts/${olderPost.slug}/`}>
+            <span>older</span>
+            <strong>{olderPost.data.title}</strong>
+          </a>
+        ) : <span />}
+      </nav>
+    )}
+
+    <footer class="article-end shell">
+      <span>EOF</span>
+      <div>
+        <button type="button" class="text-button" data-copy-link>copy permalink</button>
+        <a href="/posts/" class="text-button">cd ../notes <span aria-hidden="true">→</span></a>
+      </div>
+    </footer>
+  </article>
+
+  <style>
+    .article-hero__meta {
+      flex-wrap: wrap;
+    }
+
+    .article-adjacent {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .article-adjacent__link {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .article-adjacent__link span {
+      color: var(--faint);
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.04em;
+    }
+
+    .article-adjacent__link strong {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      transition: color var(--dur-micro) ease;
+    }
+
+    .article-adjacent__link:hover strong {
+      color: var(--accent);
+    }
+
+    .article-adjacent__link--next {
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    @media (max-width: 700px) {
+      .article-adjacent {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .article-adjacent__link--next {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+  </style>
+</BaseLayout>

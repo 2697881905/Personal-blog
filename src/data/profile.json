@@ -1,18 +1,21 @@
 {
   "name": "抹茶味的琴",
-  "title": "Java 后端开发者",
-  "avatar": "/avatar.png",
-  "location": "China",
-  "bio": "专注 Java 后端开发，喜欢把稳定的工程实践和清爽的用户体验放在一起。",
-  "tags": ["Java", "钢琴", "MySQL", "Vue", "Docker", "Linux"],
+  "handle": "matcha",
+  "title": "Java backend developer",
+  "location": "Xi'an, China",
+  "timezone": "Asia/Shanghai",
+  "status": "open to interesting problems",
+  "bio": "Java 后端开发者。写接口、索引和部署，也做 ArkTS 与前端交互。长期维护 MindType 与有据，这里记录能复用的工程判断。",
+  "now": "把 MindType 的 Redis 用法、有据的 HarmonyOS 工程和这个博客的发布链路写成笔记。",
+  "tags": ["Java", "Spring Boot", "MySQL", "Redis", "ArkTS", "Vue", "Docker", "Linux"],
   "socialLinks": [
     {
       "label": "GitHub",
-      "href": "https://github.com/itxiaobai"
+      "href": "https://github.com/2697881905"
     },
     {
       "label": "Email",
-      "href": "mailto:hello@example.com"
+      "href": "mailto:2697889105@qq.com"
     }
   ]
 }

@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="notes · 抹茶味的琴" description="Java 后端、数据库、HarmonyOS 与前端交互的技术笔记。">
+  <header class="index-header shell">
+    <p class="path-label"><span class="path-label__tilde">~</span>/notes</p>
+    <div class="index-header__line">
+      <h1 data-split>所有笔记</h1>
+      <p>{String(posts.length).padStart(2, '0')} entries · sorted by date</p>
+    </div>
+    <p class="index-header__description">不追热点，只记录已经想清楚、以后还会再用的东西。</p>
+  </header>
+
+  <section class="post-index shell" aria-label="文章列表">
+    <div class="filter-bar" data-filter-bar>
+      <span class="filter-bar__prompt" aria-hidden="true">❯</span>
+      <span class="filter-bar__command">grep --tag</span>
+      <div class="filter-bar__active" data-active-filter>
+        <span class="filter-bar__placeholder" data-filter-placeholder>*</span>
+      </div>
+      <span class="filter-bar__count" data-filter-count>{posts.length} results</span>
+      <button type="button" class="filter-bar__clear" data-filter-clear hidden>clear ×</button>
+    </div>
+
+    <div class="post-list" data-post-list transition:name="post-list">
+      {posts.map((post, index) => <PostCard post={post} filterable eager={index < 2} index={index} />)}
+    </div>
+    <p class="filter-empty" data-filter-empty-message hidden>no matches for this tag.</p>
+  </section>
+</BaseLayout>

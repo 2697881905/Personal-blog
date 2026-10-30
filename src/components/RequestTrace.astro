@@ -1,0 +1,61 @@
+---
+const stages = [
+  { index: '01', name: 'Client', detail: 'POST /api/v1/tests/progress', kind: 'request' },
+  { index: '02', name: 'Controller', detail: 'TestController.saveProgress', kind: 'validate' },
+  { index: '03', name: 'Service', detail: 'TestService.saveProgress', kind: 'transaction' },
+  { index: '04', name: 'Repository', detail: 'TestRecordMapper', kind: 'query' },
+  { index: '05', name: 'Response', detail: '200 OK', kind: 'complete' }
+];
+---
+
+<section class="trace-section" id="trace" data-trace aria-labelledby="trace-title">
+  <div class="trace-sticky">
+    <div class="trace-inner shell">
+      <header class="trace-head">
+        <div>
+          <p class="path-label"><span class="path-label__tilde">~</span>/trace <span class="path-label__branch">request.log</span></p>
+          <h2 id="trace-title" data-split>One request, end to end.</h2>
+        </div>
+        <p class="trace-counter" aria-live="polite">
+          <span data-trace-index>01</span><span> / 05</span>
+          <em data-trace-status>queued</em>
+        </p>
+      </header>
+
+      <div class="trace-board">
+        <div class="trace-track" aria-hidden="true">
+          <span class="trace-track__fill" data-trace-fill></span>
+          <i class="trace-track__pulse" data-trace-pulse></i>
+        </div>
+
+        <ol class="trace-nodes">
+          {stages.map((stage, index) => (
+            <li class="trace-node" data-trace-node data-stage={index}>
+              <span class="trace-node__index">{stage.index}</span>
+              <div>
+                <h3>{stage.name}</h3>
+                <code>{stage.detail}</code>
+              </div>
+              <small>{stage.kind}</small>
+            </li>
+          ))}
+        </ol>
+
+        <div class="trace-console">
+          <div class="trace-console__bar">
+            <span>mindtype-request.trace</span>
+            <span class="trace-console__state"><i></i><span data-trace-console-status>waiting for request</span></span>
+          </div>
+          <pre><code><span data-trace-line>POST /api/v1/tests/progress HTTP/1.1</span>
+<span data-trace-line>Authorization: Bearer ****</span>
+<span data-trace-line>controller  <span class="trace-dim">TestController.saveProgress</span></span>
+<span data-trace-line>service     <span class="trace-dim">TestService.saveProgress</span></span>
+<span data-trace-line>repository  <span class="trace-dim">UPDATE test_record</span></span>
+<span data-trace-line>response    <span class="trace-accent">200 OK</span></span></code></pre>
+        </div>
+      </div>
+
+      <p class="trace-hint">scroll to execute <span aria-hidden="true">↓</span></p>
+    </div>
+  </div>
+</section>

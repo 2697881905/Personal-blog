@@ -1,0 +1,155 @@
+---
+import projects from '../data/projects.json';
+---
+<div class="verified-work" data-reveal aria-label="已核实的项目与仓库">
+  <div class="verified-work__head">
+    <div>
+      <p class="eyebrow">Selected work</p>
+      <h3>项目与仓库</h3>
+    </div>
+    <span class="verified-work__count">{String(projects.length).padStart(2, '0')} entries</span>
+  </div>
+
+  <ul class="verified-work__list">
+    {projects.map((project, index) => (
+      <li>
+        <span class="verified-work__index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+        <div class="verified-work__body">
+          <a
+            class="verified-work__title"
+            href={project.link || project.gitee}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {project.title} <span aria-hidden="true">↗</span>
+          </a>
+          <p>{project.description}</p>
+          {project.gitee && project.gitee !== (project.link || project.gitee) && (
+            <a class="verified-work__repo" href={project.gitee} target="_blank" rel="noreferrer">
+              repo <span aria-hidden="true">↗</span>
+            </a>
+          )}
+          <div class="verified-work__tags">
+            {project.tags.map((tag) => <span>{tag}</span>)}
+          </div>
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  <a class="verified-work__more" href="#projects">open projects/ <span aria-hidden="true">→</span></a>
+</div>
+
+<style>
+  .verified-work {
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+
+  .verified-work__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .verified-work__head h3 {
+    margin: 7px 0 0;
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .verified-work__count {
+    color: var(--faint);
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+  }
+
+  .verified-work__list {
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .verified-work__list li {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 12px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .verified-work__list li:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .verified-work__index {
+    color: var(--accent);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+
+  .verified-work__title {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--dur-micro) ease;
+  }
+
+  .verified-work__title:hover {
+    color: var(--accent);
+  }
+
+  .verified-work__body p {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.7;
+  }
+
+  .verified-work__repo {
+    display: inline-block;
+    margin-top: 8px;
+    color: var(--faint);
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .verified-work__repo:hover {
+    color: var(--accent);
+  }
+
+  .verified-work__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .verified-work__tags span {
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--faint);
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+  }
+
+  .verified-work__more {
+    display: inline-block;
+    margin-top: 18px;
+    color: var(--accent);
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-decoration: none;
+  }
+</style>

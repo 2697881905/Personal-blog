@@ -1,0 +1,88 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  filterable?: boolean;
+  eager?: boolean;
+  index?: number;
+}
+
+const { post, filterable = false, eager = false, index = 0 } = Astro.props;
+const { slug, data } = post;
+const href = `/posts/${slug}/`;
+const readingTime = Math.max(1, Math.ceil(post.body.length / 500));
+const date = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })
+  .format(data.pubDate)
+  .replaceAll('/', '.');
+const dateTime = data.pubDate.toISOString().slice(0, 10);
+const tagId = (tag: string) => tag.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+---
+
+<article
+  class="post-row"
+  style={`--row-index:${index}`}
+  data-post-card
+  data-route-card={href}
+  data-tags={data.tags.join('|')}
+  data-shared-root
+  data-cursor="read"
+>
+  <a href={href} class="post-row__cover-link" aria-label={`阅读 ${data.title}`}>
+    <img
+      src={data.cover}
+      alt={data.coverAlt}
+      class="post-row__cover"
+      width="1600"
+      height="900"
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      data-shared-id={`post:${slug}:cover`}
+      transition:name={`post-${slug}-cover`}
+    />
+  </a>
+
+  <div class="post-row__content">
+    <div class="post-row__meta">
+      <span
+        class="post-row__index"
+        data-shared-id={`post:${slug}:index`}
+        transition:name={`post-${slug}-index`}
+      >{String(index + 1).padStart(2, '0')}</span>
+      <time
+        datetime={dateTime}
+        class="post-row__date"
+        data-shared-id={`post:${slug}:date`}
+        transition:name={`post-${slug}-date`}
+      >{date}</time>
+      <span
+        class="post-row__reading"
+        data-shared-id={`post:${slug}:read`}
+        transition:name={`post-${slug}-read`}
+      >{readingTime} min</span>
+    </div>
+    <h2 class="post-row__title">
+      <a
+        href={href}
+        class="post-row__title-link"
+        data-shared-id={`post:${slug}:title`}
+        transition:name={`post-${slug}-title`}
+      >{data.title}</a>
+    </h2>
+    <p class="post-row__description">{data.description}</p>
+    <div class="post-row__tags">
+      {data.tags.map((tag) => filterable ? (
+        <button
+          type="button"
+          class="tag tag--button"
+          data-filter-tag={tag}
+          data-shared-id={`filter:post:${slug}:tag:${tagId(tag)}`}
+        >{tag}</button>
+      ) : (
+        <a class="tag" href={`/posts/?tag=${encodeURIComponent(tag)}`}>{tag}</a>
+      ))}
+    </div>
+  </div>
+
+  <span class="post-row__arrow" aria-hidden="true"><em>read</em><span>↗</span></span>
+</article>

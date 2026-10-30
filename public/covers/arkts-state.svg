@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">ArkTS 状态管理</title>
+  <desc id="desc">石墨黑背景上的状态循环、界面卡片和抹茶金标题</desc>
+  <rect width="1600" height="900" fill="#15171a"/>
+  <path d="M64 112H1536M64 788H1536" stroke="#474b47"/>
+  <text x="84" y="86" fill="#8a8978" font-family="Arial, sans-serif" font-size="20" letter-spacing="5">UI NOTES / 03</text>
+  <text x="1516" y="86" text-anchor="end" fill="#8a8978" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">HARMONYOS / ArkTS</text>
+  <text x="96" y="300" fill="#ff8709" font-family="Arial, sans-serif" font-size="108" font-weight="700" letter-spacing="-4">STATE</text>
+  <text x="100" y="370" fill="#b9b7a6" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="30" letter-spacing="5">数据是界面的唯一来源</text>
+  <path d="M100 426h570" stroke="#ff8709" stroke-width="4"/>
+  <g font-family="Arial, sans-serif" font-size="18" letter-spacing="2" fill="#66655b">
+    <text x="100" y="486">@STATE</text><text x="250" y="486">@PROP</text><text x="390" y="486">@LINK</text>
+  </g>
+  <g fill="none" stroke-width="2">
+    <rect x="100" y="554" width="182" height="82" stroke="#ff8709"/>
+    <rect x="342" y="554" width="182" height="82" stroke="#5f5e55"/>
+    <rect x="584" y="554" width="182" height="82" stroke="#9d95ff"/>
+    <path d="M282 595h60m-14-14 14 14-14 14M524 595h60m-14-14 14 14-14 14" stroke="#ff8709"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="19" text-anchor="middle">
+    <text x="191" y="604" fill="#ff8709">DATA</text><text x="433" y="604" fill="#8a8978">STATE</text><text x="675" y="604" fill="#9d95ff">RENDER</text>
+  </g>
+  <g transform="translate(892 176)">
+    <rect width="520" height="486" rx="28" fill="none" stroke="#5c5b52" stroke-width="2"/>
+    <rect x="28" y="30" width="464" height="62" fill="none" stroke="#3b3a35"/>
+    <circle cx="62" cy="61" r="8" fill="#ff8709"/>
+    <path d="M90 61h140" stroke="#8a8978" stroke-width="8"/>
+    <rect x="28" y="124" width="222" height="154" fill="none" stroke="#ff8709" stroke-width="2"/>
+    <rect x="270" y="124" width="222" height="154" fill="none" stroke="#4a4a43" stroke-width="2"/>
+    <path d="M58 230l46-52 38 30 50-54 30 76" fill="none" stroke="#ff8709" stroke-width="3"/>
+    <circle cx="380" cy="200" r="44" fill="none" stroke="#8a8978" stroke-width="2"/>
+    <path d="M358 200h44M380 178v44" stroke="#ff8709" stroke-width="3"/>
+    <rect x="28" y="306" width="464" height="54" fill="none" stroke="#4a4a43"/>
+    <rect x="28" y="382" width="300" height="70" fill="#ff8709"/>
+    <text x="178" y="426" text-anchor="middle" fill="#15171a" font-family="Arial, sans-serif" font-size="19" letter-spacing="2">UPDATE STATE</text>
+    <rect x="348" y="382" width="144" height="70" fill="none" stroke="#4a4a43"/>
+  </g>
+  <text x="84" y="838" fill="#66655b" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">DECLARATIVE UI / SINGLE SOURCE OF TRUTH</text>
+  <text x="1516" y="838" text-anchor="end" fill="#ff8709" font-family="Arial, sans-serif" font-size="22">DATA → UI</text>
+</svg>

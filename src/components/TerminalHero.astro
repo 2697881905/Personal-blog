@@ -1,0 +1,43 @@
+---
+import profile from '../data/profile.json';
+---
+
+<div class="terminal-card" data-terminal aria-label="可交互的开发者终端">
+  <div class="terminal-card__bar">
+    <div class="terminal-card__lights" aria-hidden="true"><i></i><i></i><i></i></div>
+    <span>matcha@blog: ~</span>
+    <span class="terminal-card__shell">zsh</span>
+  </div>
+
+  <div class="terminal-card__body" data-terminal-output aria-live="polite">
+    <p class="terminal-line"><span class="terminal-prompt">❯</span> whoami</p>
+    <p class="terminal-line terminal-output">{profile.title} / {profile.location}</p>
+    <p class="terminal-line"><span class="terminal-prompt">❯</span> pwd</p>
+    <p class="terminal-line terminal-output">/home/matcha/engineering-notes</p>
+    <p class="terminal-line"><span class="terminal-prompt">❯</span> status --short</p>
+    <p class="terminal-line terminal-output"><span class="terminal-ok">●</span> {profile.status}</p>
+  </div>
+
+  <form class="terminal-form" data-terminal-form>
+    <label for="terminal-input" class="terminal-prompt" aria-hidden="true">❯</label>
+    <input
+      id="terminal-input"
+      class="terminal-input"
+      data-terminal-input
+      type="text"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      aria-label="输入终端命令"
+      placeholder="type `help`"
+    />
+    <span class="terminal-caret" aria-hidden="true">_</span>
+  </form>
+
+  <div class="terminal-hints" aria-label="可用命令">
+    <span>try</span>
+    <button type="button" data-terminal-run="help">help</button>
+    <button type="button" data-terminal-run="whoami">whoami</button>
+    <button type="button" data-terminal-run="notes">notes</button>
+  </div>
+</div>

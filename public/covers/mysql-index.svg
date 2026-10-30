@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">MySQL 索引设计</title>
+  <desc id="desc">石墨黑背景上的索引树、数据页和抹茶金排版</desc>
+  <rect width="1600" height="900" fill="#181a19"/>
+  <path d="M70 110H1530M70 790H1530" stroke="#3b3a35"/>
+  <text x="88" y="84" fill="#8a8978" font-family="Arial, sans-serif" font-size="20" letter-spacing="5">DATABASE NOTES / 02</text>
+  <text x="1512" y="84" text-anchor="end" fill="#8a8978" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">MYSQL / INNODB</text>
+  <g fill="none" stroke="#5f5e55" stroke-width="2">
+    <rect x="350" y="176" width="180" height="70"/>
+    <rect x="160" y="342" width="180" height="70"/>
+    <rect x="350" y="342" width="180" height="70"/>
+    <rect x="540" y="342" width="180" height="70"/>
+    <rect x="92" y="530" width="152" height="88"/>
+    <rect x="264" y="530" width="152" height="88"/>
+    <rect x="436" y="530" width="152" height="88"/>
+    <rect x="608" y="530" width="152" height="88"/>
+    <path d="M440 246v48M250 294h380M250 294v48M440 294v48M630 294v48M250 412v58M168 470h504M168 470v60M340 470v60M512 470v60M684 470v60"/>
+  </g>
+  <g fill="#ff8709" font-family="Arial, sans-serif" font-size="24" text-anchor="middle">
+    <text x="440" y="220">ROOT</text>
+    <text x="250" y="386">20</text>
+    <text x="440" y="386" fill="#9d95ff">40</text>
+    <text x="630" y="386">60</text>
+  </g>
+  <g fill="#8a8978" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">
+    <text x="168" y="568">01 — 18</text><text x="168" y="596">DATA PAGE</text>
+    <text x="340" y="568">20 — 38</text><text x="340" y="596">DATA PAGE</text>
+    <text x="512" y="568">40 — 58</text><text x="512" y="596">DATA PAGE</text>
+    <text x="684" y="568">60 — 78</text><text x="684" y="596">DATA PAGE</text>
+  </g>
+  <path d="M440 246v48M250 294h380M630 294v48M630 412v58M512 470h172M512 470v60" fill="none" stroke="#ff8709" stroke-width="3"/>
+  <rect x="436" y="530" width="152" height="88" fill="none" stroke="#ff8709" stroke-width="3"/>
+  <text x="896" y="280" fill="#ff8709" font-family="Arial, sans-serif" font-size="100" font-weight="700" letter-spacing="-3">INDEX</text>
+  <text x="896" y="386" fill="#ff8709" font-family="Arial, sans-serif" font-size="100" font-weight="700" letter-spacing="-3">DESIGN</text>
+  <text x="902" y="464" fill="#b9b7a6" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="28" letter-spacing="4">少一次扫描，多一分确定</text>
+  <g font-family="Arial, sans-serif" font-size="19" fill="#5f5e55" letter-spacing="2">
+    <text x="902" y="544">SELECTIVITY</text>
+    <text x="1110" y="544">ORDER</text>
+    <text x="1270" y="544">COVERING</text>
+  </g>
+  <path d="M902 580h500M902 596h360" stroke="#3b3a35" stroke-width="2"/>
+  <text x="88" y="840" fill="#5f5e55" font-family="Arial, sans-serif" font-size="18" letter-spacing="3">QUERY / B+TREE / DATA PAGE</text>
+  <text x="1512" y="840" text-anchor="end" fill="#ff8709" font-family="Arial, sans-serif" font-size="22">SQL → PLAN</text>
+</svg>

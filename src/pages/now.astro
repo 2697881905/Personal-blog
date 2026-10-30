@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import profile from '../data/profile.json';
+---
+
+<BaseLayout title="now · 抹茶味的琴" description="最近在做什么、学什么、用什么。">
+  <header class="index-header shell">
+    <p class="path-label"><span class="path-label__tilde">~</span>/now.md</p>
+    <div class="index-header__line">
+      <h1 data-split>Now</h1>
+      <p>updated 2026.10.31</p>
+    </div>
+    <p class="index-header__description">一份持续更新中的近况，而不是一份简历。</p>
+  </header>
+
+  <div class="now-page shell">
+    <section data-reveal>
+      <p class="now-page__label">01 / building</p>
+      <h2>正在做</h2>
+      <ul>
+        <li>把 MindType 的验证码、限流与缓存边界写成可执行的 <a href="/posts/redis-boundary/">Redis 笔记</a>。</li>
+        <li>拆解有据的 HarmonyOS 工程：<a href="/posts/youju-harmonyos-engineering/">信息流、状态同步、推送与深链</a>。</li>
+        <li>整理这个博客的 <a href="/posts/astro-nginx-deploy/">Astro 构建与 Nginx 发布链路</a>，补齐可回滚的部署步骤。</li>
+        <li>维护 MindType 与有据，处理那些上线之后才会出现的问题。</li>
+      </ul>
+    </section>
+    <section data-reveal>
+      <p class="now-page__label">02 / learning</p>
+      <h2>正在学</h2>
+      <ul>
+        <li><a href="/posts/mysql-index-design/">MySQL 执行计划与联合索引的选择</a>，尽量用数据而不是经验做判断。</li>
+        <li><a href="/posts/redis-boundary/">Redis 的 TTL、原子命令与多实例限流边界</a>。</li>
+        <li><a href="/posts/harmonyos-arkts-state/">HarmonyOS NEXT 的 ArkUI 刷新、列表性能与推送深链</a>。</li>
+        <li><a href="/posts/astro-nginx-deploy/">Astro 静态产物的缓存分层与可回滚发布</a>。</li>
+      </ul>
+    </section>
+    <section data-reveal>
+      <p class="now-page__label">03 / setup</p>
+      <h2>日常工具</h2>
+      <div class="now-page__stack">
+        <span>IntelliJ IDEA</span><span>DevEco Studio</span><span>VS Code</span><span>Docker</span><span>Nginx</span><span>MySQL</span><span>Redis</span><span>Prisma</span><span>Git</span><span>Astro</span><span>Figma</span>
+      </div>
+    </section>
+    <section data-reveal>
+      <p class="now-page__label">04 / elsewhere</p>
+      <h2>更多入口</h2>
+      <div class="now-page__links">
+        {profile.socialLinks.map((link) => (
+          <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
+            {link.label.toLowerCase()} <span aria-hidden="true">↗</span>
+          </a>
+        ))}
+        <a href="/posts/">notes/ <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    .now-page li a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .now-page li a:hover {
+      color: var(--accent-strong);
+    }
+  </style>
+</BaseLayout>

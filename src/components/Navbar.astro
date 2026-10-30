@@ -1,30 +1,56 @@
 ---
+const pathname = Astro.url.pathname;
 const links = [
-  { href: '#top', label: '首页' },
-  { href: '#about', label: '关于' },
-  { href: '#projects', label: '项目' },
-  { href: '#skills', label: '技术栈' },
+  { href: '/posts/', label: 'notes', active: pathname.startsWith('/posts') },
+  { href: '/#projects', label: 'projects', active: false },
+  { href: '/now/', label: 'now', active: pathname.startsWith('/now') },
+  { href: '/#about', label: 'about', active: false }
 ];
 ---
 
 <header class="site-nav" data-nav>
-  <div class="site-nav__inner">
-    <a href="#top" class="site-nav__brand" data-magnetic="0.2" aria-label="回到顶部">
-      <span class="site-nav__brand-mark">抹</span>
-      <span>抹茶味的琴</span>
+  <div class="site-nav__inner shell">
+    <a
+      href="/"
+      class="site-nav__brand"
+      aria-label="抹茶味的琴，返回首页"
+      data-shared-id="site:brand"
+      transition:name="site-brand"
+    >
+      <span class="site-nav__tilde" aria-hidden="true">~</span>
+      <span>/matcha</span>
     </a>
 
     <nav class="site-nav__links" aria-label="主导航">
-      {
-        links.map((l) => (
-          <a href={l.href} class="site-nav__link" data-nav-link>
-            <span>{l.label}</span>
-            <span class="site-nav__underline" aria-hidden="true"></span>
-          </a>
-        ))
-      }
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={["site-nav__link", { "is-active": link.active }]}
+          aria-current={link.active ? 'page' : undefined}
+        >/{link.label}</a>
+      ))}
     </nav>
 
-    <a href="#contact" class="site-nav__cta" data-magnetic="0.35">联系我</a>
+    <div class="site-nav__actions">
+      <button
+        type="button"
+        class="motion-toggle"
+        data-motion-toggle
+        title="切换动效偏好：跟随系统 / 完整 / 低动效"
+      >
+        motion:<span data-motion-state>auto</span>
+      </button>
+      <span class="site-nav__status"><i aria-hidden="true"></i>static</span>
+      <button
+        type="button"
+        class="command-trigger"
+        data-command-open
+        aria-label="打开搜索与命令面板"
+        aria-keyshortcuts="Control+K Meta+K"
+      >
+        <span class="command-trigger__label">find</span>
+        <kbd>ctrl</kbd><kbd>k</kbd>
+      </button>
+    </div>
   </div>
 </header>

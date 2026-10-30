@@ -1,29 +1,33 @@
 [
   {
-    "title": "MindType恋爱人格测试",
-    "description": "基于RuoYi框架开发的情感测试网站",
+    "id": "mindtype",
+    "title": "MindType 恋爱人格测试",
+    "description": "基于 MBTI 与关系心理学的测评站：题库、草稿续测、计分报告、支付宝解锁与运营后台。",
     "logo": "/logos/mindtype.svg",
     "link": "https://mindtype.cn",
     "gitee": "https://gitee.com/bai-yi-fei/mind-type",
-    "tags": ["Java", "SpringBoot", "MyBatis", "MySQL"]
+    "tags": ["Java", "Spring Boot", "MyBatis-Plus", "MySQL", "Redis", "Vue"],
+    "details": [
+      "Spring Boot 3.3 + MyBatis-Plus + Flyway 的后端结构",
+      "草稿续测、计分快照与报告解锁状态机",
+      "支付宝验签、幂等下单与掉单补偿",
+      "uni-app H5 / 微信小程序与 Vue 3 管理后台"
+    ]
   },
   {
+    "id": "youju",
     "title": "有据",
-    "description": "基于 HarmonyOS NEXT 原生开发的社区应用，支持结构化帖子、关注推荐流与消息推送。",
+    "description": "HarmonyOS NEXT 原生社区：结构化体验帖、三段信息流、星图圈子、私信与推送。",
     "logo": "/logos/youju.png",
     "link": "https://youju.chat",
-    "tags": ["HarmonyOS", "ArkTS", "Node.js", "MySQL"]
-  },
-  {
-    "title": "校园任务协作平台",
-    "description": "面向学生团队的任务协作系统，提供项目看板、成员分工和进度追踪能力。",
-    "gitee": "https://gitee.com/itxiaobai/campus-task-board",
-    "tags": ["Vue", "JavaScript", "SpringMVC", "MySQL"]
-  },
-  {
-    "title": "开发者工具箱",
-    "description": "收集常用开发辅助功能的小工具集合，包括格式转换、接口调试记录和日志检索。",
-    "gitee": "https://github.com/itxiaobai/dev-toolbox",
-    "tags": ["Python", "Java", "Git", "Maven"]
+    "gitee": "https://github.com/2697881905/youju",
+    "tags": ["HarmonyOS", "ArkTS", "Node.js", "TypeScript", "MySQL"],
+    "details": [
+      "47 个 ArkTS 页面的 Stage 模型客户端",
+      "推荐 / 关注 / 每日一帖三段信息流",
+      "星图圈子、结构化帖子与互动体系",
+      "Express + Prisma + MySQL 的 v1 API",
+      "华为账号登录、Push Kit 与深链路由"
+    ]
   }
 ]

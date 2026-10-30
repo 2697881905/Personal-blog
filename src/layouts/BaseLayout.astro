@@ -1,137 +1,129 @@
 ---
+import '@fontsource/geist/latin-400.css';
+import '@fontsource/geist/latin-500.css';
+import '@fontsource/geist/latin-600.css';
+import '@fontsource/geist/latin-700.css';
+import '@fontsource/geist-mono/latin-400.css';
+import '@fontsource/geist-mono/latin-500.css';
+import 'lenis/dist/lenis.css';
+import { ViewTransitions } from 'astro:transitions';
+import Navbar from '../components/Navbar.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import profile from '../data/profile.json';
 import '../styles/global.css';
+import '../styles/mobile.css';
 
-type SocialLink = {
-  label: string;
-  href: string;
-};
-
-type Profile = {
-  name: string;
-  title: string;
-  socialLinks: SocialLink[];
-};
-
-const { profile, title = `${profile.name} | ${profile.title}` } = Astro.props as {
-  profile: Profile;
+interface Props {
   title?: string;
-};
+  description?: string;
+  type?: 'website' | 'article';
+  image?: string;
+  published?: string;
+  updated?: string;
+  tags?: string[];
+}
+
+const {
+  title = `${profile.name} · ${profile.title}`,
+  description = `${profile.name}的个人技术博客，记录 Java 后端、数据库、HarmonyOS 与前端交互。`,
+  type = 'website',
+  image = '/og-image.png',
+  published,
+  updated,
+  tags
+} = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const ogImage = image && Astro.site ? new URL(image, Astro.site).href : undefined;
 ---
 
 <!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content={`${profile.name} 的个人技术主页`} />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@400;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="description" content={description} />
+    <meta name="author" content={profile.name} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0e100f" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="zh_CN" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:width" content="1200" />}
+    {ogImage && <meta property="og:image:height" content="630" />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    {published && <meta property="article:published_time" content={published} />}
+    {updated && <meta property="article:modified_time" content={updated} />}
+    {tags?.map((tag) => <meta property="article:tag" content={tag} />)}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="64x64" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title={`${profile.name} · RSS`} href="/rss.xml" />
     <title>{title}</title>
-  </head>
-  <body class="bg-background font-sans text-text antialiased">
-    <div class="bg-video-layer pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-      <video
-        id="bg-video"
-        class="bg-video"
-        poster="/background-poster.png"
-        autoplay
-        muted
-        loop
-        playsinline
-        webkit-playsinline="true"
-        x5-playsinline="true"
-        x5-video-player-type="h5"
-        x5-video-player-fullscreen="false"
-        x5-video-orientation="portrait"
-        preload="auto"
-        disablepictureinpicture
-        disableremoteplayback
-      >
-        <source src="/background.mp4" type="video/mp4" />
-      </video>
-      <div
-        class="absolute inset-0 bg-gradient-to-b from-background/60 via-background/55 to-background/85"
-        aria-hidden="true"
-      ></div>
-    </div>
-
-    <div id="page-entrance" class="page-entrance" aria-hidden="true">
-      <div class="page-entrance__ring"></div>
-    </div>
-
     <script is:inline>
-      (function () {
-        function hideEntrance() {
-          var el = document.getElementById('page-entrance');
-          if (el) { el.style.display = 'none'; el.classList.add('is-done'); }
+      try {
+        const preference = localStorage.getItem('matcha:motion');
+        if (preference === 'full' || preference === 'reduced') {
+          document.documentElement.dataset.motion = preference;
         }
-        window.addEventListener('load', function () { setTimeout(hideEntrance, 4000); });
-        setTimeout(hideEntrance, 6000);
-      })();
+      } catch {}
     </script>
-
-    <main class="relative z-10">
+    <ViewTransitions fallback="none" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到正文</a>
+    <Navbar />
+    <div class="scroll-progress" data-scroll-progress aria-hidden="true"><span data-scroll-bar></span></div>
+    <main id="main-content">
       <slot />
     </main>
+    <SiteFooter name={profile.name} />
 
-    <script is:inline>
-      (function () {
-        var video = document.getElementById('bg-video');
-        if (!video) return;
+    <div class="command-layer" data-command-layer hidden>
+      <div class="command-layer__backdrop" data-command-close></div>
+      <section
+        class="command-palette"
+        role="dialog"
+        aria-modal="true"
+        aria-label="搜索与命令"
+      >
+        <div class="command-palette__bar">
+          <span>fuzzy find</span>
+          <button type="button" data-command-close aria-label="关闭命令面板">esc</button>
+        </div>
+        <label class="command-palette__search">
+          <span aria-hidden="true">❯</span>
+          <input
+            type="text"
+            data-command-input
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="command-results"
+            aria-autocomplete="list"
+            placeholder="find a note, page, or command…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </label>
+        <div class="command-palette__results" id="command-results" data-command-results role="listbox"></div>
+        <div class="command-palette__foot">
+          <span><kbd>↑</kbd><kbd>↓</kbd> move</span>
+          <span><kbd>↵</kbd> open</span>
+          <span><kbd>esc</kbd> close</span>
+        </div>
+      </section>
+    </div>
 
-        function tryPlay() {
-          if (video.paused) {
-            var p = video.play();
-            if (p && typeof p.catch === 'function') {
-              p.catch(function () {
-                video.muted = true;
-                video.play().catch(function () {});
-              });
-            }
-          }
-        }
-
-        video.addEventListener('canplay', tryPlay);
-        video.addEventListener('loadeddata', tryPlay);
-        video.addEventListener('loadedmetadata', tryPlay);
-
-        // WeChat 内置浏览器（iOS WKWebView / Android X5）自动播放标准方案：
-        // 监听微信 JS Bridge 就绪事件，或 Bridge 已存在时立即触发播放。
-        if (typeof window.WeixinJSBridge !== 'undefined') {
-          tryPlay();
-        } else {
-          document.addEventListener('WeixinJSBridgeReady', tryPlay, false);
-        }
-
-        function onGesture() {
-          tryPlay();
-          if (!video.paused) {
-            document.removeEventListener('touchstart', onGesture);
-            document.removeEventListener('click', onGesture);
-          }
-        }
-        document.addEventListener('touchstart', onGesture, { passive: true });
-        document.addEventListener('click', onGesture);
-
-        if (document.readyState !== 'loading') {
-          tryPlay();
-        } else {
-          document.addEventListener('DOMContentLoaded', tryPlay);
-        }
-
-        document.addEventListener('visibilitychange', function () {
-          if (document.hidden) {
-            video.pause();
-          } else {
-            tryPlay();
-          }
-        });
-      })();
+    <script>
+      import { initSite, destroySite } from '../scripts/site';
+      document.addEventListener('astro:page-load', initSite);
+      document.addEventListener('astro:before-swap', destroySite);
     </script>
   </body>
 </html>
