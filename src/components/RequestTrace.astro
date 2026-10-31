@@ -1,10 +1,10 @@
 ---
 const stages = [
-  { index: '01', name: 'Client', detail: 'POST /api/v1/tests/progress', kind: 'request' },
-  { index: '02', name: 'Controller', detail: 'TestController.saveProgress', kind: 'validate' },
-  { index: '03', name: 'Service', detail: 'TestService.saveProgress', kind: 'transaction' },
-  { index: '04', name: 'Repository', detail: 'TestRecordMapper', kind: 'query' },
-  { index: '05', name: 'Response', detail: '200 OK', kind: 'complete' }
+  { index: '01', name: 'Event', detail: 'PostCard.onClick(handleLike)', kind: 'gesture' },
+  { index: '02', name: 'State', detail: 'likeStore: liked false → true', kind: 'mutate' },
+  { index: '03', name: 'Diff', detail: 'dirty: like icon + count text', kind: 'minimal' },
+  { index: '04', name: 'Build', detail: 'PostCard.build()', kind: 'rerender' },
+  { index: '05', name: 'Paint', detail: 'frame committed @ next vsync', kind: 'frame' }
 ];
 ---
 
@@ -13,8 +13,8 @@ const stages = [
     <div class="trace-inner shell">
       <header class="trace-head">
         <div>
-          <p class="path-label"><span class="path-label__tilde">~</span>/trace <span class="path-label__branch">request.log</span></p>
-          <h2 id="trace-title" data-split>One request, end to end.</h2>
+          <p class="path-label"><span class="path-label__tilde">~</span>/trace <span class="path-label__branch">arkui-render.log</span></p>
+          <h2 id="trace-title" data-split>One tap, one repaint.</h2>
         </div>
         <p class="trace-counter" aria-live="polite">
           <span data-trace-index>01</span><span> / 05</span>
@@ -43,19 +43,18 @@ const stages = [
 
         <div class="trace-console">
           <div class="trace-console__bar">
-            <span>mindtype-request.trace</span>
-            <span class="trace-console__state"><i></i><span data-trace-console-status>waiting for request</span></span>
+            <span>arkui-render.trace</span>
+            <span class="trace-console__state"><i></i><span data-trace-console-status>waiting for input</span></span>
           </div>
-          <pre><code><span data-trace-line>POST /api/v1/tests/progress HTTP/1.1</span>
-<span data-trace-line>Authorization: Bearer ****</span>
-<span data-trace-line>controller  <span class="trace-dim">TestController.saveProgress</span></span>
-<span data-trace-line>service     <span class="trace-dim">TestService.saveProgress</span></span>
-<span data-trace-line>repository  <span class="trace-dim">UPDATE test_record</span></span>
-<span data-trace-line>response    <span class="trace-accent">200 OK</span></span></code></pre>
+          <pre><code><span data-trace-line>event       PostCard.onClick → handleLike()</span>
+<span data-trace-line>state       <span class="trace-dim">likeStore: liked false → true · count +1</span></span>
+<span data-trace-line>diff        <span class="trace-dim">dirty: like icon + count text — no list rebuild</span></span>
+<span data-trace-line>build       <span class="trace-dim">PostCard.build()</span></span>
+<span data-trace-line>paint       <span class="trace-accent">frame committed @ next vsync</span></span></code></pre>
         </div>
       </div>
 
-      <p class="trace-hint">scroll to execute <span aria-hidden="true">↓</span></p>
+      <p class="trace-hint">scroll to render <span aria-hidden="true">↓</span></p>
     </div>
   </div>
 </section>

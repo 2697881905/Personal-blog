@@ -9,6 +9,7 @@ import RequestTrace from '../components/RequestTrace.astro';
 import Manifesto from '../components/Manifesto.astro';
 import profile from '../data/profile.json';
 import projects from '../data/projects.json';
+import { TECH_LINKS } from '../data/tech-links';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -16,11 +17,11 @@ const lastWrite = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-
   .format(posts[0].data.pubDate)
   .replaceAll('/', '.');
 const stack = [
-  ['harmony', 'HarmonyOS NEXT / ArkUI / ArkTS / DevEco Studio'],
-  ['language', 'TypeScript / Java / JavaScript'],
-  ['backend', 'Spring Boot / MyBatis-Plus / Express / Prisma / MySQL / Redis'],
-  ['frontend', 'Vue / uni-app / Astro / GSAP'],
-  ['infra', 'Linux / Docker / Nginx / Git']
+  ['harmony', ['HarmonyOS NEXT', 'ArkUI', 'ArkTS', 'DevEco Studio']],
+  ['language', ['TypeScript', 'Java', 'JavaScript']],
+  ['backend', ['Spring Boot', 'MyBatis-Plus', 'Express', 'Prisma', 'MySQL', 'Redis']],
+  ['frontend', ['Vue', 'uni-app', 'Astro', 'GSAP']],
+  ['infra', ['Linux', 'Docker', 'Nginx', 'Git']]
 ] as const;
 
 // Decorative hex dump column (build-time generated, aria-hidden).
@@ -78,16 +79,24 @@ const asciiPanel = [
   <div class="marquee marquee--tech" data-marquee data-duration="34" aria-hidden="true">
     <div class="marquee__track" data-marquee-track>
       <div class="marquee__group">
-        <span>ArkTS</span><i>✳</i><span class="is-outline">HarmonyOS</span><i>✳</i>
-        <span>TypeScript</span><i>✳</i><span class="is-outline">Java</span><i>✳</i>
-        <span>Spring Boot</span><i>✳</i><span class="is-outline">MySQL</span><i>✳</i>
-        <span>Redis</span><i>✳</i><span class="is-outline">Docker</span><i>✳</i>
+        <a href={TECH_LINKS['ArkTS']} target="_blank" rel="noreferrer" tabindex="-1"><span>ArkTS</span></a><i>✳</i>
+        <a href={TECH_LINKS['HarmonyOS']} target="_blank" rel="noreferrer" tabindex="-1"><span class="is-outline">HarmonyOS</span></a><i>✳</i>
+        <a href={TECH_LINKS['TypeScript']} target="_blank" rel="noreferrer" tabindex="-1"><span>TypeScript</span></a><i>✳</i>
+        <a href={TECH_LINKS['Java']} target="_blank" rel="noreferrer" tabindex="-1"><span class="is-outline">Java</span></a><i>✳</i>
+        <a href={TECH_LINKS['Spring Boot']} target="_blank" rel="noreferrer" tabindex="-1"><span>Spring Boot</span></a><i>✳</i>
+        <a href={TECH_LINKS['MySQL']} target="_blank" rel="noreferrer" tabindex="-1"><span class="is-outline">MySQL</span></a><i>✳</i>
+        <a href={TECH_LINKS['Redis']} target="_blank" rel="noreferrer" tabindex="-1"><span>Redis</span></a><i>✳</i>
+        <a href={TECH_LINKS['Docker']} target="_blank" rel="noreferrer" tabindex="-1"><span class="is-outline">Docker</span></a><i>✳</i>
       </div>
       <div class="marquee__group">
-        <span>ArkTS</span><i>✳</i><span class="is-outline">HarmonyOS</span><i>✳</i>
-        <span>TypeScript</span><i>✳</i><span class="is-outline">Java</span><i>✳</i>
-        <span>Spring Boot</span><i>✳</i><span class="is-outline">MySQL</span><i>✳</i>
-        <span>Redis</span><i>✳</i><span class="is-outline">Docker</span><i>✳</i>
+        <a href={TECH_LINKS['ArkTS']} target="_blank" rel="noreferrer" tabindex="-1"><span>ArkTS</span></a><i>✳</i>
+        <a href={TECH_LINKS['HarmonyOS']} target="_blank" rel="noreferrer" tabindex="-1"><span class="is-outline">HarmonyOS</span></a><i>✳</i>
+        <a href={TECH_LINKS['TypeScript']} target="_blank" rel="noreferrer" tabindex="-1"><span>TypeScript</span></a><i>✳</i>
+        <a href={TECH_LINKS['Java']} target="_blank" rel="noreferrer" tabindex="-1"><span class="is-outline">Java</span></a><i>✳</i>
+        <a href={TECH_LINKS['Spring Boot']} target="_blank" rel="noreferrer" tabindex="-1"><span>Spring Boot</span></a><i>✳</i>
+        <a href={TECH_LINKS['MySQL']} target="_blank" rel="noreferrer" tabindex="-1"><span class="is-outline">MySQL</span></a><i>✳</i>
+        <a href={TECH_LINKS['Redis']} target="_blank" rel="noreferrer" tabindex="-1"><span>Redis</span></a><i>✳</i>
+        <a href={TECH_LINKS['Docker']} target="_blank" rel="noreferrer" tabindex="-1"><span class="is-outline">Docker</span></a><i>✳</i>
       </div>
     </div>
   </div>
@@ -116,7 +125,7 @@ const asciiPanel = [
       <section class="aside-block" data-reveal>
         <header><span>stack.txt</span><span>{String(profile.tags.length).padStart(2, '0')}</span></header>
         <div class="aside-stack">
-          {profile.tags.map((tag) => <span>{tag}</span>)}
+          {profile.tags.map((tag) => <a href={TECH_LINKS[tag]} target="_blank" rel="noreferrer">{tag}</a>)}
         </div>
       </section>
 
@@ -169,7 +178,11 @@ const asciiPanel = [
       {stack.map(([label, value]) => (
         <div class="stack-row" data-reveal>
           <span>{label}</span>
-          <p>{value}</p>
+          <p>
+            {value.map((item, index) => (
+              <span>{index > 0 ? ' / ' : ''}<a href={TECH_LINKS[item]} target="_blank" rel="noreferrer">{item}</a></span>
+            ))}
+          </p>
         </div>
       ))}
     </div>

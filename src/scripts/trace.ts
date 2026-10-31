@@ -4,8 +4,8 @@ import { motionEnabled } from './motion-control';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const STAGES = ['queued', 'routing', 'transaction', 'querying', 'complete'];
-const CONSOLE_STATES = ['waiting for request', 'validating contract', 'service transaction', 'database roundtrip', 'response committed'];
+const STAGES = ['queued', 'observed', 'mutated', 'rebuilding', 'painted'];
+const CONSOLE_STATES = ['waiting for input', 'gesture captured', 'state mutated', 'rebuild scope resolved', 'frame committed'];
 
 export function initTrace(): () => void {
   const section = document.querySelector<HTMLElement>('[data-trace]');
@@ -28,8 +28,8 @@ export function initTrace(): () => void {
   let lastStage = -1;
 
   const context = gsap.context(() => {
-    gsap.set(nodes, { opacity: 0.28, borderColor: 'rgba(234,248,220,0.11)' });
-    gsap.set(nodes[0], { opacity: 1, borderColor: 'rgba(215,255,84,0.6)' });
+    gsap.set(nodes, { opacity: 0.28, borderColor: 'rgba(255,252,225,0.11)' });
+    gsap.set(nodes[0], { opacity: 1, borderColor: 'rgba(0,255,156,0.55)' });
     gsap.set(lines, { opacity: 0.28 });
     gsap.set(lines[0], { opacity: 1 });
     gsap.set(fill, { scaleX: 0 });
@@ -63,13 +63,13 @@ export function initTrace(): () => void {
       const at = stage * 0.2;
       timeline.to(node, {
         opacity: 1,
-        borderColor: 'rgba(215,255,84,0.6)',
+        borderColor: 'rgba(0,255,156,0.55)',
         duration: 0.09
       }, at);
       if (stage > 0) {
         timeline.to(nodes[stage - 1], {
           opacity: 0.52,
-          borderColor: 'rgba(234,248,220,0.11)',
+          borderColor: 'rgba(255,252,225,0.11)',
           duration: 0.1
         }, at);
       }

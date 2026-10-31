@@ -186,7 +186,7 @@ export function initInteractions(): () => void {
           overwrite: true
         });
         gsap.to(card, {
-          backgroundColor: 'rgba(215,255,84,0.05)',
+          backgroundColor: 'rgba(0,255,156,0.04)',
           scale: 1.008,
           duration: 0.2,
           ease: 'power2.out'

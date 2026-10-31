@@ -1,4 +1,5 @@
 ---
+import { TECH_LINKS } from '../data/tech-links';
 interface Project {
   id: string;
   title: string;
@@ -36,7 +37,11 @@ const repoLink = project.gitee && project.gitee !== primaryLink ? project.gitee 
     </div>
     <p class="project-card__description">{project.description}</p>
     <div class="project-card__tags">
-      {project.tags.map((tag) => <span class="tag">{tag}</span>)}
+      {project.tags.map((tag) => TECH_LINKS[tag] ? (
+        <a class="tag" href={TECH_LINKS[tag]} target="_blank" rel="noreferrer">{tag}</a>
+      ) : (
+        <span class="tag">{tag}</span>
+      ))}
     </div>
     <div class="project-card__details">
       <p class="project-card__details-label">implementation_notes</p>

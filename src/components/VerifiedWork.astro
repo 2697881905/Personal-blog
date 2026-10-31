@@ -1,5 +1,6 @@
 ---
 import projects from '../data/projects.json';
+import { TECH_LINKS } from '../data/tech-links';
 ---
 <div class="verified-work" data-reveal aria-label="已核实的项目与仓库">
   <div class="verified-work__head">
@@ -30,7 +31,11 @@ import projects from '../data/projects.json';
             </a>
           )}
           <div class="verified-work__tags">
-            {project.tags.map((tag) => <span>{tag}</span>)}
+            {project.tags.map((tag) => TECH_LINKS[tag] ? (
+              <a href={TECH_LINKS[tag]} target="_blank" rel="noreferrer">{tag}</a>
+            ) : (
+              <span>{tag}</span>
+            ))}
           </div>
         </div>
       </li>
@@ -135,6 +140,7 @@ import projects from '../data/projects.json';
     margin-top: 10px;
   }
 
+  .verified-work__tags a,
   .verified-work__tags span {
     padding: 2px 6px;
     border: 1px solid var(--border);
@@ -142,6 +148,12 @@ import projects from '../data/projects.json';
     color: var(--faint);
     font-family: 'Geist Mono', monospace;
     font-size: 9px;
+    transition: color var(--dur-micro) ease, border-color var(--dur-micro) ease;
+  }
+
+  .verified-work__tags a:hover {
+    border-color: rgba(255, 135, 9, 0.3);
+    color: var(--accent-strong);
   }
 
   .verified-work__more {

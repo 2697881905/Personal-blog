@@ -4,10 +4,10 @@
 
 :root {
   color-scheme: dark;
-  --bg: #0e100f;
-  --bg-soft: #131614;
-  --surface: #171a18;
-  --surface-raised: #1e221f;
+  --bg: #0d0d0b;
+  --bg-soft: #121210;
+  --surface: #171613;
+  --surface-raised: #1e1c18;
   --text: #fffce1;
   --muted: #b9b7a6;
   --faint: #8a8978;
@@ -16,8 +16,9 @@
   --accent-dim: rgba(255, 135, 9, 0.13);
   --violet: #9d95ff;
   --cyan: #00bae2;
-  --pink: #fec5fb;
-  --signal: #9d95ff;
+  --signal: #00ff9c;
+  --error: #ff5f56;
+  --acid: #00ff9c;
   --border: rgba(255, 252, 225, 0.12);
   --border-strong: rgba(255, 252, 225, 0.22);
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -32,7 +33,7 @@
   --radius-lg: 12px;
   --cursor-accent: #ff8709;
   --cursor-fill: #fffce1;
-  --cursor-outline: #0e100f;
+  --cursor-outline: #0d0d0b;
   --cursor-label-gap: 13px;
 }
 
@@ -67,11 +68,10 @@ body::before {
   pointer-events: none;
   content: '';
   background:
-    radial-gradient(ellipse 52% 42% at 96% -6%, rgba(157, 149, 255, 0.11), transparent 64%),
-    radial-gradient(ellipse 46% 36% at -6% 74%, rgba(255, 135, 9, 0.07), transparent 70%),
-    radial-gradient(ellipse 30% 24% at 52% 112%, rgba(0, 186, 226, 0.05), transparent 70%);
+    radial-gradient(ellipse 52% 42% at 96% -6%, rgba(255, 135, 9, 0.09), transparent 64%),
+    radial-gradient(ellipse 46% 36% at -6% 74%, rgba(0, 255, 156, 0.05), transparent 70%);
 }
-::selection { background: var(--accent); color: #0e100f; }
+::selection { background: var(--accent); color: #0d0d0b; }
 a { color: inherit; text-decoration: none; }
 button, input { font: inherit; }
 button { color: inherit; cursor: pointer; }
@@ -141,7 +141,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.terminal-ok { color: var(--cyan); }
+.terminal-ok { color: var(--acid); }
 
 .skip-link {
   position: fixed;
@@ -152,7 +152,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transform: translateY(-160%);
   border-radius: var(--radius-sm);
   background: var(--accent);
-  color: #0e100f;
+  color: #0d0d0b;
   font-family: 'Geist Mono', monospace;
   font-size: 11px;
 }
@@ -220,7 +220,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--cyan);
+  background: var(--acid);
 }
 .command-trigger {
   display: inline-flex;
@@ -281,10 +281,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   width: 100vw;
   z-index: 0;
   background:
-    radial-gradient(ellipse 46% 52% at 74% 34%, rgba(157, 149, 255, 0.22), transparent 68%),
-    radial-gradient(ellipse 42% 42% at 22% 62%, rgba(255, 135, 9, 0.13), transparent 70%),
-    radial-gradient(ellipse 36% 40% at 50% 16%, rgba(0, 186, 226, 0.11), transparent 72%),
-    radial-gradient(ellipse 22% 36% at 88% 68%, rgba(254, 197, 251, 0.08), transparent 74%);
+    radial-gradient(ellipse 46% 52% at 74% 34%, rgba(255, 135, 9, 0.17), transparent 68%),
+    radial-gradient(ellipse 42% 42% at 22% 62%, rgba(0, 255, 156, 0.07), transparent 70%),
+    radial-gradient(ellipse 36% 40% at 50% 16%, rgba(255, 135, 9, 0.05), transparent 72%);
   filter: blur(44px);
   opacity: 0.95;
   pointer-events: none;
@@ -395,7 +394,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .terminal-line { margin: 0; color: var(--muted); }
 .terminal-prompt { margin-right: 7px; color: var(--accent); }
 .terminal-output { padding-left: 21px; color: var(--faint); }
-.terminal-error { color: var(--signal); }
+.terminal-error { color: var(--error); }
 .terminal-dynamic { animation: none; }
 .terminal-form {
   display: flex;
@@ -487,6 +486,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-size: clamp(12px, 1.4vw, 20px);
   font-style: normal;
 }
+.marquee__group a { display: inline-flex; }
+.marquee__group a:hover span { color: var(--accent); }
+.marquee__group a:hover .is-outline { -webkit-text-stroke-color: var(--accent); }
 
 /* ── Manifesto ────────────────────────────────────────────── */
 .manifesto {
@@ -593,7 +595,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .manifesto__progress i {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #6a5cff, #d45f00);
+  background: linear-gradient(90deg, #b34700, #ff8709);
   transform: scaleX(0);
   transform-origin: left;
 }
@@ -683,13 +685,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .aside-block > a span { color: var(--accent); }
 .aside-stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-.aside-stack span {
+.aside-stack a {
   padding: 2px 6px;
   border: 1px solid var(--border);
   border-radius: 3px;
   color: var(--faint);
   font-family: 'Geist Mono', monospace;
   font-size: 9px;
+  transition: color var(--dur-micro) ease, border-color var(--dur-micro) ease;
+}
+.aside-stack a:hover {
+  border-color: rgba(255, 135, 9, 0.3);
+  color: var(--accent-strong);
 }
 .aside-clock {
   margin-bottom: 0 !important;
@@ -1080,6 +1087,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
   text-transform: uppercase;
 }
 .stack-row p { margin: 0; color: var(--muted); font-family: 'Geist Mono', monospace; font-size: 10px; line-height: 1.7; }
+.stack-row p a { transition: color var(--dur-micro) ease; }
+.stack-row p a:hover { color: var(--accent-strong); }
 
 /* ── Piano panel ──────────────────────────────────────────── */
 .piano-panel {
@@ -1227,8 +1236,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .section-rail a { display: flex; align-items: center; gap: 7px; padding: 2px 0 2px 5px; color: #66655b; transition: color var(--dur-micro) ease, background-color var(--dur-micro) ease; }
 .section-rail a span { color: #525149; font-size: 8px; }
 .section-rail a::after { width: 10px; height: 1px; content: ''; background: currentColor; opacity: 0.45; }
-.section-rail a.is-active { padding-left: 7px; background: var(--accent); color: #0e100f; }
-.section-rail a.is-active span { color: #0e100f; }
+.section-rail a.is-active { padding-left: 7px; background: var(--accent); color: #0d0d0b; }
+.section-rail a.is-active span { color: #0d0d0b; }
 .section-rail a.is-active::after { width: 22px; height: 2px; opacity: 1; }
 .section-rail a { transition: color var(--dur-micro) ease, background-color var(--dur-micro) ease; }
 /* The manifesto flips to cream paper; the rail flips with it. */
@@ -1599,7 +1608,19 @@ html.has-custom-cursor [contenteditable="true"] { cursor: text !important; }
 .now-page ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 13px; line-height: 1.7; }
 .now-page li::before { content: '—'; margin-right: 8px; color: var(--accent); }
 .now-page__stack { display: flex; flex-wrap: wrap; gap: 6px; }
-.now-page__stack span { padding: 2px 6px; border: 1px solid var(--border); border-radius: 3px; color: var(--faint); font-family: 'Geist Mono', monospace; font-size: 9px; }
+.now-page__stack a {
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--faint);
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  transition: color var(--dur-micro) ease, border-color var(--dur-micro) ease;
+}
+.now-page__stack a:hover {
+  border-color: rgba(255, 135, 9, 0.3);
+  color: var(--accent-strong);
+}
 .now-page__links { display: flex; flex-wrap: wrap; gap: 16px; color: var(--muted); font-family: 'Geist Mono', monospace; font-size: 10px; }
 .now-page__links a span { color: var(--accent); }
 
@@ -1939,9 +1960,6 @@ html.has-custom-cursor [contenteditable="true"] { cursor: text !important; }
 /* ══ Geek layer ═══════════════════════════════════════════════
    CRT texture, blueprint grid, glitch, boot screen, matrix rain,
    phosphor-green hack mode. Appended last so it overrides base. */
-:root {
-  --acid: #00ff9c;
-}
 
 /* Blueprint grid behind everything (body::before holds the auras). */
 body::after {
@@ -2137,7 +2155,7 @@ html[data-hack="on"] .softbus-canvas { opacity: 1; }
 .ide-tip .c-ty { color: var(--cyan); }
 .ide-tip .c-fn { color: var(--accent-strong); }
 .ide-tip .c-str { color: var(--text); }
-.ide-tip .c-num { color: var(--pink); }
+.ide-tip .c-num { color: var(--accent-strong); }
 
 /* ── hilog levels ─────────────────────────────────────────── */
 .terminal-card .log-t { color: var(--faint); }
@@ -2257,7 +2275,6 @@ html[data-hack="on"] {
   --accent-dim: rgba(0, 255, 156, 0.12);
   --violet: #00ff9c;
   --cyan: #00ff9c;
-  --pink: #7dffc4;
   --border: rgba(0, 255, 156, 0.16);
   --border-strong: rgba(0, 255, 156, 0.34);
   --cursor-accent: #00ff9c;

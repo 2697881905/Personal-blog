@@ -124,7 +124,7 @@
     font-size: 10.5px;
   }
   .aside-stack { gap: 6px; margin-top: 12px; }
-  .aside-stack span {
+  .aside-stack a {
     display: inline-flex;
     min-height: 28px;
     align-items: center;
@@ -315,7 +315,7 @@
   .now-page__label { font-size: 10px; }
   .now-page h2 { font-size: 20px; margin-bottom: 10px; }
   .now-page ul { font-size: 14px; gap: 7px; }
-  .now-page__stack span {
+  .now-page__stack a {
     display: inline-flex;
     min-height: 30px;
     align-items: center;

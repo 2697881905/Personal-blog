@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import profile from '../data/profile.json';
+import { TECH_LINKS } from '../data/tech-links';
+
+const tools = ['DevEco Studio', 'IntelliJ IDEA', 'VS Code', 'Docker', 'Nginx', 'MySQL', 'Redis', 'Prisma', 'Git', 'Astro', 'Figma'];
 ---
 
 <BaseLayout title="now · 抹茶味的琴" description="最近在改有径的真机问题、有据的推送链路，以及 MindType 的缓存与索引。">
@@ -38,7 +41,7 @@ import profile from '../data/profile.json';
       <p class="now-page__label">03 / setup</p>
       <h2>日常工具</h2>
       <div class="now-page__stack">
-        <span>DevEco Studio</span><span>IntelliJ IDEA</span><span>VS Code</span><span>Docker</span><span>Nginx</span><span>MySQL</span><span>Redis</span><span>Prisma</span><span>Git</span><span>Astro</span><span>Figma</span>
+        {tools.map((tool) => <a href={TECH_LINKS[tool]} target="_blank" rel="noreferrer">{tool}</a>)}
       </div>
     </section>
     <section data-reveal>
