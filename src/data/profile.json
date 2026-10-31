@@ -1,13 +1,12 @@
 {
   "name": "抹茶味的琴",
   "handle": "matcha",
-  "title": "Java backend developer",
-  "location": "Xi'an, China",
+  "title": "HarmonyOS / ArkTS developer",
   "timezone": "Asia/Shanghai",
-  "status": "open to interesting problems",
-  "bio": "Java 后端开发者。写接口、索引和部署，也做 ArkTS 与前端交互。长期维护 MindType 与有据，这里记录能复用的工程判断。",
-  "now": "把 MindType 的 Redis 用法、有据的 HarmonyOS 工程和这个博客的发布链路写成笔记。",
-  "tags": ["Java", "Spring Boot", "MySQL", "Redis", "ArkTS", "Vue", "Docker", "Linux"],
+  "status": "有径 · 真机验证中",
+  "bio": "专注 HarmonyOS NEXT 原生开发与 ArkTS 工程实践，并以 Java / Spring Boot 作为第二技术栈。维护有据、有径与 MindType：有据覆盖社区信息流、状态同步与推送链路，有径负责 AI 行程生成、Map Kit 集成与 RDB 迁移，MindType 承载验证码、支付与测评报告。本站内容均以仓库代码、真机行为和线上日志为依据。",
+  "now": "有径进入收尾阶段：AI 行程的 Schema 校验、Map Kit 落点与 RDB v6 迁移；有据复查信息流缓存与 Push 深链；MindType 补充 Redis 限流与支付掉单记录。",
+  "tags": ["ArkTS", "HarmonyOS", "TypeScript", "Java", "Spring Boot", "MySQL", "Redis", "Docker"],
   "socialLinks": [
     {
       "label": "GitHub",

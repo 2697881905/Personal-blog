@@ -10,7 +10,7 @@ export const GET: APIRoute = async (context) => {
 
   return rss({
     title: `${profile.name} · 工程笔记`,
-    description: `${profile.name}的个人技术博客，记录 Java 后端、数据库、HarmonyOS 与前端交互。`,
+    description: '有据、有径与 MindType 的工程笔记：ArkTS 真机问题、Spring Boot 接口、MySQL 索引和 Redis 边界。',
     site,
     items: posts.map((post) => ({
       title: post.data.title,

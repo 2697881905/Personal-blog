@@ -1,6 +1,6 @@
 ---
 title: "Astro 静态站点部署：从 dist 到 Nginx 的可回滚发布"
-description: "以这个博客为例，把 Astro 的静态构建落到 Nginx：产物验证、缓存分层、容器化、原子切换和回滚。"
+description: "这个博客从 `astro build` 到 Nginx 上线的实际流程：产物检查、缓存分层、原子切换，以及出问题时怎么回滚。"
 pubDate: 2026-10-22
 updatedDate: 2026-10-31
 tags: ["Astro", "Nginx", "Docker", "Linux"]

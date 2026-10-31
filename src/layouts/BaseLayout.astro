@@ -25,7 +25,7 @@ interface Props {
 
 const {
   title = `${profile.name} · ${profile.title}`,
-  description = `${profile.name}的个人技术博客，记录 Java 后端、数据库、HarmonyOS 与前端交互。`,
+  description = `记录有据、有径与 MindType 的实现细节：ArkTS / HarmonyOS 真机问题、Spring Boot 接口、MySQL 索引与 Redis 边界。`,
   type = 'website',
   image = '/og-image.png',
   published,
@@ -37,7 +37,7 @@ const ogImage = image && Astro.site ? new URL(image, Astro.site).href : undefine
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-cursor="technical">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -68,15 +68,18 @@ const ogImage = image && Astro.site ? new URL(image, Astro.site).href : undefine
     <title>{title}</title>
     <script is:inline>
       try {
-        const preference = localStorage.getItem('matcha:motion');
-        if (preference === 'full' || preference === 'reduced') {
-          document.documentElement.dataset.motion = preference;
-        }
+        localStorage.removeItem('matcha:motion');
       } catch {}
+      document.documentElement.dataset.motion = 'full';
     </script>
     <ViewTransitions fallback="none" />
   </head>
   <body>
+    <div class="crt" aria-hidden="true">
+      <span class="crt__beam"></span>
+      <span class="crt__noise"></span>
+      <span class="crt__vignette"></span>
+    </div>
     <a class="skip-link" href="#main-content">跳到正文</a>
     <Navbar />
     <div class="scroll-progress" data-scroll-progress aria-hidden="true"><span data-scroll-bar></span></div>

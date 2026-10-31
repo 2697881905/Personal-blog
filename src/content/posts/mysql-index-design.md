@@ -1,6 +1,6 @@
 ---
 title: "MySQL 索引设计：从查询条件出发"
-description: "把高频查询、参数分布、联合索引顺序、覆盖索引、执行计划与写入成本放在同一张决策桌上，给出一套可以复用的索引评审流程。"
+description: "拿有据和 MindType 的真实查询拆索引：先看参数分布和 EXPLAIN，再定联合索引顺序，最后把写入成本算进去。"
 pubDate: 2025-03-12
 updatedDate: 2026-10-31
 tags: ["MySQL", "Java", "MyBatis"]

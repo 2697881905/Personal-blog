@@ -1,6 +1,6 @@
 ---
 title: "ArkTS 状态管理：让界面跟随数据"
-description: "结合有据的真实页面，梳理 ArkUI 状态装饰器的同步方向、@Builder 值快照、ForEach key、跨组件点赞同步、请求序号与持久化边界。"
+description: "有据里的状态到底该放在哪：@Builder 值快照、ForEach key、跨页面点赞同步，以及请求序号和持久化的边界。"
 pubDate: 2025-04-09
 updatedDate: 2026-10-31
 tags: ["ArkTS", "HarmonyOS", "DevEco Studio"]

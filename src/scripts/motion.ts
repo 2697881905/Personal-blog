@@ -154,7 +154,7 @@ export function initMotionScenes(): () => void {
           ease: 'expo.out'
         }, 0.06)
         .from(
-          hero.querySelectorAll('.hero__role, .hero__bio, .hero__meta, .hero__links, .motion-callout:not([hidden])'),
+          hero.querySelectorAll('.hero__role, .hero__bio, .hero__meta, .hero__links'),
           { y: 18, autoAlpha: 0, duration: 0.62, stagger: 0.06 },
           0.26
         )

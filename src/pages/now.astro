@@ -3,14 +3,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import profile from '../data/profile.json';
 ---
 
-<BaseLayout title="now · 抹茶味的琴" description="最近在做什么、学什么、用什么。">
+<BaseLayout title="now · 抹茶味的琴" description="最近在改有径的真机问题、有据的推送链路，以及 MindType 的缓存与索引。">
   <header class="index-header shell">
     <p class="path-label"><span class="path-label__tilde">~</span>/now.md</p>
     <div class="index-header__line">
       <h1 data-split>Now</h1>
       <p>updated 2026.10.31</p>
     </div>
-    <p class="index-header__description">一份持续更新中的近况，而不是一份简历。</p>
+    <p class="index-header__description">当前工作、待验证项与近期关注。</p>
   </header>
 
   <div class="now-page shell">
@@ -18,27 +18,27 @@ import profile from '../data/profile.json';
       <p class="now-page__label">01 / building</p>
       <h2>正在做</h2>
       <ul>
-        <li>把 MindType 的验证码、限流与缓存边界写成可执行的 <a href="/posts/redis-boundary/">Redis 笔记</a>。</li>
-        <li>拆解有据的 HarmonyOS 工程：<a href="/posts/youju-harmonyos-engineering/">信息流、状态同步、推送与深链</a>。</li>
-        <li>整理这个博客的 <a href="/posts/astro-nginx-deploy/">Astro 构建与 Nginx 发布链路</a>，补齐可回滚的部署步骤。</li>
-        <li>维护 MindType 与有据，处理那些上线之后才会出现的问题。</li>
+        <li>有径：完成 AI 行程的 Schema 校验、Map Kit 落点与 RDB v6 迁移，执行 79 条真机用例，仓库见 <a href="https://github.com/2697881905/YouJing">GitHub</a>。</li>
+        <li>有据：复查三段信息流的缓存、点赞态同步与 <a href="/posts/youju-harmonyos-engineering/">Push 深链</a>。</li>
+        <li>MindType：整理验证码 TTL、短信限流与支付掉单补偿的实现，记录在 <a href="/posts/redis-boundary/">Redis 笔记</a>。</li>
+        <li>本站：将 Astro 构建与 <a href="/posts/astro-nginx-deploy/">Nginx 发布</a>流程整理为可回滚步骤。</li>
       </ul>
     </section>
     <section data-reveal>
       <p class="now-page__label">02 / learning</p>
       <h2>正在学</h2>
       <ul>
-        <li><a href="/posts/mysql-index-design/">MySQL 执行计划与联合索引的选择</a>，尽量用数据而不是经验做判断。</li>
-        <li><a href="/posts/redis-boundary/">Redis 的 TTL、原子命令与多实例限流边界</a>。</li>
-        <li><a href="/posts/harmonyos-arkts-state/">HarmonyOS NEXT 的 ArkUI 刷新、列表性能与推送深链</a>。</li>
-        <li><a href="/posts/astro-nginx-deploy/">Astro 静态产物的缓存分层与可回滚发布</a>。</li>
+        <li><a href="/posts/harmonyos-arkts-state/">ArkUI：@Builder 值快照、ForEach key、List 复用和深色模式下的材质</a>。</li>
+        <li><a href="/posts/redis-boundary/">Redis：TTL、一次性校验、单机限流与多实例的差别</a>。</li>
+        <li><a href="/posts/mysql-index-design/">MySQL：用 EXPLAIN 和真实参数分布决定联合索引</a>，不凭感觉。</li>
+        <li><a href="/posts/astro-nginx-deploy/">Astro：静态产物的缓存分层和回滚</a>。</li>
       </ul>
     </section>
     <section data-reveal>
       <p class="now-page__label">03 / setup</p>
       <h2>日常工具</h2>
       <div class="now-page__stack">
-        <span>IntelliJ IDEA</span><span>DevEco Studio</span><span>VS Code</span><span>Docker</span><span>Nginx</span><span>MySQL</span><span>Redis</span><span>Prisma</span><span>Git</span><span>Astro</span><span>Figma</span>
+        <span>DevEco Studio</span><span>IntelliJ IDEA</span><span>VS Code</span><span>Docker</span><span>Nginx</span><span>MySQL</span><span>Redis</span><span>Prisma</span><span>Git</span><span>Astro</span><span>Figma</span>
       </div>
     </section>
     <section data-reveal>

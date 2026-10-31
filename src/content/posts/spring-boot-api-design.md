@@ -1,6 +1,6 @@
 ---
 title: "Spring Boot 接口设计：把边界写清楚"
-description: "从资源命名、DTO 校验、错误语义、幂等、分页到版本演进，整理一套可以落到 Spring Boot 代码里的接口契约检查清单。"
+description: "拿 MindType 的接口逐条对照：错误码、HMAC 令牌、幂等下单和分页，哪些能直接复用，哪些是反面例子。"
 pubDate: 2025-02-18
 updatedDate: 2026-10-31
 tags: ["Java", "Spring Boot", "Spring MVC"]

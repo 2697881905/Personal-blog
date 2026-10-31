@@ -1,33 +1,49 @@
 [
   {
+    "id": "youju",
+    "title": "有据",
+    "description": "HarmonyOS NEXT 社区客户端：47 个 ArkTS 页面，三段信息流、星图圈子、私信和 Push 深链，后端是 Express + Prisma + MySQL。",
+    "logo": "/logos/youju.png",
+    "link": "https://youju.chat",
+    "gitee": "https://github.com/2697881905/youju",
+    "tags": ["ArkTS", "HarmonyOS", "TypeScript", "Node.js", "MySQL"],
+    "details": [
+      "47 个 ArkTS 页面，Stage 模型 + 进程级 likeStore 同步点赞态",
+      "首页用 Scroll 多列，避开 LazyForEach 在 Swiper 分页下的串页问题",
+      "网络层用 STRING 模式手动解析，绕开 OBJECT 响应超 64KB 降级",
+      "401 只写 authExpiredAt 标记，2 秒节流后由 UI 统一清态",
+      "Push Kit 与 youju:// 深链收敛到同一个 PushRoute"
+    ]
+  },
+  {
+    "id": "youjing",
+    "title": "有径",
+    "description": "HarmonyOS NEXT 行程规划：AI 按 Schema 生成行程，Map Kit 画落点，华为账号、日历和桌面卡片一并接上，79 条真机用例。",
+    "logo": "/logos/youjing.png",
+    "gitee": "https://github.com/2697881905/YouJing",
+    "tags": ["ArkTS", "HarmonyOS", "Map Kit", "Account Kit", "RDB", "小艺 Skill"],
+    "details": [
+      "39 帧底稿落成 ArkTS 页面，HDS 顶栏 + 深浅两档 token",
+      "TripSchema / TripParser / PromptBuilder 同源，枚举漂移由单测钉住",
+      "RDB v1→v6 累积迁移；128 景点 / 144 片区按 id 幂等回填",
+      "Map Kit 真底图，图钉用 OffscreenCanvas 画序号",
+      "华为账号静默登录、Calendar Kit 写入、2×2 / 2×4 桌面卡片"
+    ]
+  },
+  {
     "id": "mindtype",
     "title": "MindType 恋爱人格测试",
-    "description": "基于 MBTI 与关系心理学的测评站：题库、草稿续测、计分报告、支付宝解锁与运营后台。",
+    "description": "MBTI 与关系心理测评站：Spring Boot 3.3 后端，题库、计分快照、支付宝解锁和运营后台都在线上跑。",
     "logo": "/logos/mindtype.svg",
     "link": "https://mindtype.cn",
     "gitee": "https://gitee.com/bai-yi-fei/mind-type",
     "tags": ["Java", "Spring Boot", "MyBatis-Plus", "MySQL", "Redis", "Vue"],
     "details": [
-      "Spring Boot 3.3 + MyBatis-Plus + Flyway 的后端结构",
-      "草稿续测、计分快照与报告解锁状态机",
-      "支付宝验签、幂等下单与掉单补偿",
-      "uni-app H5 / 微信小程序与 Vue 3 管理后台"
-    ]
-  },
-  {
-    "id": "youju",
-    "title": "有据",
-    "description": "HarmonyOS NEXT 原生社区：结构化体验帖、三段信息流、星图圈子、私信与推送。",
-    "logo": "/logos/youju.png",
-    "link": "https://youju.chat",
-    "gitee": "https://github.com/2697881905/youju",
-    "tags": ["HarmonyOS", "ArkTS", "Node.js", "TypeScript", "MySQL"],
-    "details": [
-      "47 个 ArkTS 页面的 Stage 模型客户端",
-      "推荐 / 关注 / 每日一帖三段信息流",
-      "星图圈子、结构化帖子与互动体系",
-      "Express + Prisma + MySQL 的 v1 API",
-      "华为账号登录、Push Kit 与深链路由"
+      "Spring Boot 3.3 + MyBatis-Plus + Flyway，H2 + 嵌入式 Redis 跑集成测试",
+      "短信验证码 5 分钟 TTL，校验后立即删除；本地内存回退只用于开发环境",
+      "支付宝回调按业务唯一键 + 状态机幂等，定时任务补掉单",
+      "自定义 ApiResponse + GlobalExceptionHandler，统一 401 / 403 / 404 / 429",
+      "HMAC-SHA256 令牌，签名、过期和 scope 都在服务端校验"
     ]
   }
 ]

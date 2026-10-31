@@ -22,22 +22,23 @@
 | 跨页转场 | **View Transitions API** | 5 类文章共享元素 + 品牌，`view-transition-class` 分组编排 |
 | 页内共享 | **GSAP Flip** | 项目、二维码、图片、代码全屏 |
 | 速度反馈 | **ScrollTrigger velocity + quickTo** | 跑马灯变速、列表 skew、缩略图 3D tilt |
-| 光标 | 原生指针（可选技术指针） | 默认不接管系统光标；动作提示显示在元素原位 |
+| 光标 | 技术箭头指针（`data-cursor="technical"`） | 默认启用；动作提示显示在元素原位，删除属性可恢复原生指针 |
 | 代码高亮 | **Shiki `vesper`** | 暖色语法，避免绿色与整体色板冲突 |
 | 框架 | **Astro 4.16 + TypeScript** | 静态生成、文件路由、内容集合 |
 
 ```text
 src/scripts/
 ├── motion.ts          # 首屏 3D 标题、宣言章节、跑马灯、速度倾斜与正文场景
+├── hacker.ts          # CRT 叠层、开机自检、软总线拓扑、ArkTS inspector、终端彩蛋
 ├── trace.ts           # 滚动驱动的请求生命周期，正反向 scrub
 ├── smooth.ts          # Lenis 生命周期与锚点滚动
-├── cursor.ts          # 可选技术指针与配置项（默认不启用）
+├── cursor.ts          # 技术箭头指针（默认启用）与配置项
 ├── reading.ts         # 全局滚动进度、章节 rail、文章目录
 ├── palette.ts         # Ctrl K 命令面板
-├── terminal.ts        # 可输入终端
+├── terminal.ts        # 可输入终端（neofetch / hdc / hilog / bus / 彩蛋命令）
 ├── filters.ts         # 标签筛选
 ├── interactions.ts    # Flip 浮层、灯箱、代码块
-├── motion-control.ts  # system / full / low 三态动效偏好
+├── motion-control.ts  # 固定完整动效
 └── transitions/       # shared-id 约定、Flip、旧浏览器降级
 ```
 
@@ -180,15 +181,14 @@ src/scripts/
 
 - `Intl.Segmenter` 按词拆分，再按字建立 mask；英文单词不会被任意断行。
 - 原元素写入完整 `aria-label`，拆分字符统一 `aria-hidden="true"`，屏幕阅读器不会逐字朗读。
-- 低动效模式不拆分 / 不隐藏文本；完整模式下若切换为低动效，`context.revert()` 会清除位移，文本保持可见。
+- 文本拆分在所有页面启用；路由切换或销毁时 `context.revert()` 会清除位移，文本保持可见。
 - `prefers-reduced-transparency`、`prefers-contrast` 与焦点环继续生效。
 
-## 9. 动效偏好与降级
+## 9. 动效策略
 
-- 右上角 `motion:auto|full|low` 三态切换，存于 `localStorage`。
-- `auto` 跟随系统；系统启用减少动态效果时，首屏出现 `enable full motion` 提示。
-- `full` 显式覆盖系统低动效：启用 Lenis、GSAP 场景和完整共享转场；原生指针始终优先。
-- `low` 关闭位移、拆分、Lenis、跑马灯、列表倾斜、缩略图 tilt、宣言逐词点亮和 sticky 请求追踪；保留 120ms 淡入以及功能性滚动进度 / 章节定位。
+- 站点固定 `data-motion="full"`，不提供偏好切换；启动时清除旧的 `matcha:motion` 存储。
+- 完整动效覆盖系统低动效：启用 Lenis、GSAP 场景和完整共享转场；技术箭头指针默认启用，删除 `data-cursor="technical"` 可恢复原生指针。
+- 低动效 CSS / JS 分支保留为防御代码，但正常入口不会触发。
 - 无 JavaScript 时内容仍然完整可见；所有场景动画只增强，不承载内容。
 
 ## 10. 性能边界
@@ -199,12 +199,13 @@ src/scripts/
 - 两条跑马灯和一个宣言场景是主要的持续动效；跑马灯只改 `xPercent`，宣言只改文字的 `opacity/y`。
 - 全幅封面是 1600×900 的 SVG，`object-fit: cover` 在 16:9 容器内不产生二次裁切；7 张封面共约 60 KB。
 - Lenis 在页面切换前销毁；ScrollTrigger 由 `gsap.context` 统一清理；速度监听只有一个全局实例。
-- 无粒子、无全屏滚动劫持、无 WebGL、无多层滚动视差。
+- 无粒子、无全屏滚动劫持、无 WebGL、无多层滚动视差；软总线使用 2D Canvas，最多 5 个节点和 12 个数据包，按约 30fps 节流，并在页面不可见时暂停。
 
 ## 11. 验证记录
 
 - `npm run build`：11 个静态路由（含 404，7 篇文章）构建通过；`npm run check`：0 errors / 0 warnings / 1 hint。
-- 完整动效：首屏 6 个拆分字符、22 个宣言词、2 条跑马灯、Lenis、请求追踪与滚动进度全部启动；系统指针默认保留。
+- 完整动效：首屏 6 个拆分字符、22 个宣言词、2 条跑马灯、Lenis、请求追踪、软总线 Canvas 与滚动进度全部启动；技术箭头指针默认启用。
+- 极客层：CRT 扫描线 / beam / 噪点 / 暗角常驻；开机自检每会话一次，可点击或按键跳过；`bus` 命令触发软总线全节点脉冲；Konami 序列切换磷光绿主题。
 - 请求追踪：中段 `03 / transaction`，终点 `05 / complete`，滚回中段恢复 `03 / transaction`。
 - 路由返回：文章列表滚动位置从 `574` 恢复到 `574`。
 - 共享元素：7 篇文章 × 5 类文章共享项，加上品牌与根快照，首页共 37 个转场名称、全部唯一；文章页 7 个；转场中段无旧页文字叠影。
@@ -212,9 +213,9 @@ src/scripts/
 - 飞行分组实测：`cover` 620ms、`index` 580ms（延迟 40ms）、`title` 520ms（延迟 80ms）、`chip` 320ms；编号落地 184px；封面从 116×73 放大到 1425×802 后无二次淡入。
 - 宣言章节：背景 `#fffce1`，章节 rail 自动反相；中段计数 `03 / 03`，22 个词中 19 个已点亮，进度线与光晕同步。
 - 速度反馈：列表 `skewY` 最大 2.2°，停止后回到 0；缩略图悬停产生约 4° / 5° 的 3D 倾斜。
-- 低动效：`data-motion="reduced"` 下 Lenis 不启动、标题不拆分、宣言词不拆分、跑马灯 `transform: none`、请求追踪不 pin，宣言文字完整可见。
-- 指针：默认无 `.cursor` 层、无 `has-custom-cursor` 类，系统指针完全保留；`READ` / `OPEN` 作为行内 hover 提示。技术指针仅在 `data-cursor="technical"` 时启用，且为 0ms 精确跟随。
+- 动效策略：固定 `data-motion="full"`；低动效分支仅作为防御代码保留，正常入口不会触发。
+- 指针：默认创建技术箭头 `.cursor` 层并启用 `has-custom-cursor`；`READ` / `OPEN` / `inspect` 作为动作标签。删除 `<html data-cursor="technical">` 即回到系统指针。
 - 项目浮层：编号放大到 180px 描边水印，详情行依次进入；关闭走 280ms 反向 Flip。
 - 响应式：1440 / 1280 / 1024 / 390 均无横向溢出；1920 内容列 1440、标题 132px、终端 540px；1536 标题 115.6px；1024 标题 76.7px；390 文章全幅封面 390px，标题 54.6px；1366×768 首屏高度 598px，跑马灯完整可见；章节 rail 仅在 ≥1400px 显示。
 - 1920 文章页：全幅封面 1905×1072，标题单行；1920 宣言三行各占一行，22 词中 19 个点亮。
-- 浏览器运行时异常：0；低动效、完整动效两种偏好均验证可切换。
+- 浏览器运行时异常：0；完整动效固定运行，不再提供偏好切换。

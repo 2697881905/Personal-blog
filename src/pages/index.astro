@@ -16,21 +16,39 @@ const lastWrite = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-
   .format(posts[0].data.pubDate)
   .replaceAll('/', '.');
 const stack = [
-  ['language', 'Java / TypeScript / JavaScript / ArkTS'],
+  ['harmony', 'HarmonyOS NEXT / ArkUI / ArkTS / DevEco Studio'],
+  ['language', 'TypeScript / Java / JavaScript'],
   ['backend', 'Spring Boot / MyBatis-Plus / Express / Prisma / MySQL / Redis'],
-  ['frontend', 'Vue / uni-app / Astro / ArkTS / GSAP'],
+  ['frontend', 'Vue / uni-app / Astro / GSAP'],
   ['infra', 'Linux / Docker / Nginx / Git']
 ] as const;
+
+// Decorative hex dump column (build-time generated, aria-hidden).
+const hexDump = Array.from({ length: 24 }, (_, row) => {
+  const address = (0x7f10 + row * 8).toString(16).padStart(4, '0');
+  const bytes = Array.from({ length: 6 }, () => (Math.random() * 256 | 0).toString(16).padStart(2, '0')).join(' ');
+  return `${address}  ${bytes}`;
+}).join('\n');
+
+// ASCII system panel (open box, spans injected via set:html).
+const asciiPanel = [
+  '┌─[ <span class="ascii-acid">guest@matcha</span> ]',
+  '│ <span class="ascii-key">uptime</span>  : still shipping',
+  '│ <span class="ascii-key">runtime</span> : arkts · arkui · api 12',
+  '│ <span class="ascii-key">battery</span> : <span class="ascii-accent">caffeine 87%</span> · refilling',
+  '└──────────────────────────────────'
+].join('\n');
 ---
 
 <BaseLayout>
   <section class="hero shell" id="top">
     <span class="hero__orb" data-hero-orb aria-hidden="true"></span>
+    <span class="hero__hex" aria-hidden="true">{hexDump}</span>
 
     <div class="hero__copy">
       <p class="path-label path-label--bracket"><span class="path-label__tilde">~</span>/matcha <span class="path-label__branch">main*</span></p>
-      <h1 class="hero__title" data-split>{profile.name}<span class="hero__caret" aria-hidden="true">_</span></h1>
-      <p class="hero__role"><span aria-hidden="true">$</span> {profile.title} <span>/ backend systems & interfaces</span></p>
+      <h1 class="hero__title" data-split data-cursor="inspect">{profile.name}<span class="hero__caret" aria-hidden="true">_</span></h1>
+      <p class="hero__role"><span aria-hidden="true">$</span> {profile.title} <span>/ Stage model, ArkUI, and real-device debugging</span></p>
       <p class="hero__bio">{profile.bio}</p>
       <div class="hero__meta">
         <span class="hero__status"><i aria-hidden="true"></i>{profile.status}</span>
@@ -51,10 +69,7 @@ const stack = [
           <span data-qr-icon class="hero__qr-icon" aria-hidden="true">⌁</span>qq
         </button>
       </div>
-      <button type="button" class="motion-callout" data-motion-toggle data-motion-callout hidden>
-        <span>system: reduced motion</span>
-        <strong>enable full motion <span aria-hidden="true">→</span></strong>
-      </button>
+      <pre class="hero__ascii" aria-hidden="true" set:html={asciiPanel} />
     </div>
 
     <TerminalHero />
@@ -63,15 +78,15 @@ const stack = [
   <div class="marquee marquee--tech" data-marquee data-duration="34" aria-hidden="true">
     <div class="marquee__track" data-marquee-track>
       <div class="marquee__group">
-        <span>Java</span><i>✳</i><span class="is-outline">Spring Boot</span><i>✳</i>
-        <span>Astro</span><i>✳</i><span class="is-outline">GSAP</span><i>✳</i>
-        <span>MySQL</span><i>✳</i><span class="is-outline">ArkTS</span><i>✳</i>
+        <span>ArkTS</span><i>✳</i><span class="is-outline">HarmonyOS</span><i>✳</i>
+        <span>TypeScript</span><i>✳</i><span class="is-outline">Java</span><i>✳</i>
+        <span>Spring Boot</span><i>✳</i><span class="is-outline">MySQL</span><i>✳</i>
         <span>Redis</span><i>✳</i><span class="is-outline">Docker</span><i>✳</i>
       </div>
       <div class="marquee__group">
-        <span>Java</span><i>✳</i><span class="is-outline">Spring Boot</span><i>✳</i>
-        <span>Astro</span><i>✳</i><span class="is-outline">GSAP</span><i>✳</i>
-        <span>MySQL</span><i>✳</i><span class="is-outline">ArkTS</span><i>✳</i>
+        <span>ArkTS</span><i>✳</i><span class="is-outline">HarmonyOS</span><i>✳</i>
+        <span>TypeScript</span><i>✳</i><span class="is-outline">Java</span><i>✳</i>
+        <span>Spring Boot</span><i>✳</i><span class="is-outline">MySQL</span><i>✳</i>
         <span>Redis</span><i>✳</i><span class="is-outline">Docker</span><i>✳</i>
       </div>
     </div>
@@ -135,13 +150,13 @@ const stack = [
         <p class="path-label"><span class="path-label__tilde">~</span>/about</p>
         <h2 data-split>工程笔记之外</h2>
       </div>
-      <p class="section-head__note">{profile.location} · UTC+8</p>
+      <p class="section-head__note">{profile.timezone} · UTC+8</p>
     </div>
 
     <div class="about-grid">
       <div class="about-copy" data-reveal>
-        <p class="about-copy__lead">白天写 Java，晚上会为了一个 12px 的间距重做整页。喜欢稳定的系统，也喜欢没有多余解释的界面。</p>
-        <p>这个站点是自己的长期实验：文章尽量写清楚，交互尽量有理由。MindType 处理测评、支付与报告，有据处理 HarmonyOS 上的社区信息流；项目只列已验证仓库，文章只写能对上代码的部分。</p>
+        <p class="about-copy__lead">以 HarmonyOS NEXT / ArkTS 为主栈，Java / Spring Boot 为第二栈；重点关注状态所有权、列表复用与真机渲染一致性。</p>
+        <p>本站用于沉淀可复核的工程记录。有据、有径与 MindType 的文件、类名和报错均来自实际代码；未完成真机验证的结论会明确标注，不作推断性表述。项目仓库链接见项目卡片。</p>
         <div class="about-links">
           <a href="https://github.com/2697881905" target="_blank" rel="noreferrer">github/2697881905 ↗</a>
           <a href="mailto:2697889105@qq.com">2697889105@qq.com</a>

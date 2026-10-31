@@ -1,6 +1,6 @@
 ---
 title: "有据：HarmonyOS NEXT 社区应用的工程拆解"
-description: "从有据的真实代码出发：三段信息流、Scroll 多列布局、请求序号、401 语义、推送深链与 ArkTS 状态边界。"
+description: "有据的 47 个 ArkTS 页面怎么拆：三段信息流、Scroll 多列、请求序号、401 处理，以及 Push 深链。"
 pubDate: 2026-10-14
 updatedDate: 2026-10-31
 tags: ["HarmonyOS", "ArkTS", "Node.js"]

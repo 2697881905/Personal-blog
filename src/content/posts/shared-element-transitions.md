@@ -1,6 +1,6 @@
 ---
 title: "共享元素转场：连接两个页面"
-description: "从 View Transitions API 的命名、捕获时机和伪元素动画出发，结合这个博客的 Astro 实现，处理尺寸差异、二次淡入、中断与无障碍降级。"
+description: "这个博客的文章共享转场：命名、捕获时机、尺寸差和中断处理，重点是怎么避开二次淡入和叠影。"
 pubDate: 2025-05-21
 updatedDate: 2026-10-31
 tags: ["JavaScript", "CSS", "Astro", "Vue"]

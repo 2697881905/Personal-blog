@@ -5,10 +5,11 @@ import { initTerminal } from './terminal';
 import { initCommandPalette } from './palette';
 import { initReading } from './reading';
 import { initMotionScenes } from './motion';
-import { initMotionControl, motionEnabled } from './motion-control';
+import { motionEnabled } from './motion-control';
 import { initSmoothScroll } from './smooth';
 import { initCursor } from './cursor';
 import { initTrace } from './trace';
+import { initHackerExperience } from './hacker';
 
 let cleanups: Array<() => void> = [];
 let motionCleanups: Array<() => void> = [];
@@ -25,7 +26,8 @@ function refreshMotionExperience(): void {
     initMotionScenes(),
     initTrace(),
     initSmoothScroll(),
-    initCursor()
+    initCursor(),
+    initHackerExperience()
   ];
 }
 
@@ -69,7 +71,6 @@ export function initSite(): void {
     initTerminal(),
     initCommandPalette(),
     initReading(),
-    initMotionControl(refreshMotionExperience),
     initClocks(),
     destroyMotionExperience
   ];

@@ -48,7 +48,7 @@ const repoLink = project.gitee && project.gitee !== primaryLink ? project.gitee 
       </button>
       {primaryLink && (
         <a href={primaryLink} target="_blank" rel="noreferrer" class="text-button">
-          <span>visit</span><span aria-hidden="true">↗</span>
+          <span>{project.link ? 'visit' : 'repo'}</span><span aria-hidden="true">↗</span>
         </a>
       )}
       {repoLink && (

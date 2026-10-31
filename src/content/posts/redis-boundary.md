@@ -1,6 +1,6 @@
 ---
 title: "Redis 的边界：验证码、限流与缓存"
-description: "从 MindType 的真实用法出发：验证码 TTL、一次性校验、单机限流的局限、Cache-Aside 的竞态，以及 Redis 故障时的降级策略。"
+description: "MindType 的验证码和限流怎么用 Redis：TTL、一次性校验、本地内存回退，以及多实例下的限流和故障降级。"
 pubDate: 2026-10-30
 updatedDate: 2026-10-31
 tags: ["Redis", "Java", "Spring Boot", "MySQL"]

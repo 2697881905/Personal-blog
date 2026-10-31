@@ -38,13 +38,6 @@
     font-size: 12px;
   }
   .site-nav__actions { height: 40px; margin-left: auto; gap: 6px; }
-  .motion-toggle {
-    display: inline-flex;
-    min-height: 40px;
-    align-items: center;
-    padding: 0 8px;
-    font-size: 9.5px;
-  }
   .command-trigger {
     min-height: 40px;
     padding: 0 10px;
@@ -90,7 +83,6 @@
   .hero__links button { min-height: 44px; padding: 0 10px; border-radius: 4px; }
   .hero__links a:first-child { margin-left: -10px; }
   .hero__qr-icon { font-size: 14px; }
-  .motion-callout { min-height: 40px; font-size: 10px; }
 
   /* ── Terminal ───────────────────────────────────────────────────── */
   .terminal-card { width: 100%; max-width: none; }

@@ -7,14 +7,14 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<BaseLayout title="notes · 抹茶味的琴" description="Java 后端、数据库、HarmonyOS 与前端交互的技术笔记。">
+<BaseLayout title="notes · 抹茶味的琴" description="有据、有径与 MindType 的工程笔记：ArkTS 真机问题、Spring Boot 接口、MySQL 索引和 Redis 边界。">
   <header class="index-header shell">
     <p class="path-label"><span class="path-label__tilde">~</span>/notes</p>
     <div class="index-header__line">
       <h1 data-split>所有笔记</h1>
       <p>{String(posts.length).padStart(2, '0')} entries · sorted by date</p>
     </div>
-    <p class="index-header__description">不追热点，只记录已经想清楚、以后还会再用的东西。</p>
+    <p class="index-header__description">这里没有教程合集。每篇基本对应一次具体排查：接口、索引、真机复现或一次发布。</p>
   </header>
 
   <section class="post-index shell" aria-label="文章列表">

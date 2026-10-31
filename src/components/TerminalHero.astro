@@ -5,13 +5,13 @@ import profile from '../data/profile.json';
 <div class="terminal-card" data-terminal aria-label="可交互的开发者终端">
   <div class="terminal-card__bar">
     <div class="terminal-card__lights" aria-hidden="true"><i></i><i></i><i></i></div>
-    <span>matcha@blog: ~</span>
+    <span>matcha@blog: ~ — tty1 · 120fps</span>
     <span class="terminal-card__shell">zsh</span>
   </div>
 
   <div class="terminal-card__body" data-terminal-output aria-live="polite">
     <p class="terminal-line"><span class="terminal-prompt">❯</span> whoami</p>
-    <p class="terminal-line terminal-output">{profile.title} / {profile.location}</p>
+    <p class="terminal-line terminal-output">{profile.title} / UTC+8</p>
     <p class="terminal-line"><span class="terminal-prompt">❯</span> pwd</p>
     <p class="terminal-line terminal-output">/home/matcha/engineering-notes</p>
     <p class="terminal-line"><span class="terminal-prompt">❯</span> status --short</p>
@@ -36,8 +36,8 @@ import profile from '../data/profile.json';
 
   <div class="terminal-hints" aria-label="可用命令">
     <span>try</span>
-    <button type="button" data-terminal-run="help">help</button>
-    <button type="button" data-terminal-run="whoami">whoami</button>
-    <button type="button" data-terminal-run="notes">notes</button>
+    <button type="button" data-terminal-run="neofetch">neofetch</button>
+    <button type="button" data-terminal-run="hdc list targets">hdc</button>
+    <button type="button" data-terminal-run="bus">bus</button>
   </div>
 </div>
