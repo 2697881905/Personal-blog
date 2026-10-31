@@ -17,12 +17,14 @@ interface ActiveOverlay {
   source: HTMLElement;
   placeholder: HTMLElement;
   root: HTMLElement;
+  dialog: HTMLElement;
   kind: OverlayKind;
   expandClass?: string;
   targets: HTMLElement[];
   previousFocus: HTMLElement | null;
   previousOverflow: string;
   inertElements: HTMLElement[];
+  sheetCleanup: (() => void) | null;
 }
 
 const FLIP_PROPS = 'borderRadius,backgroundColor,borderColor,letterSpacing';
@@ -55,7 +57,11 @@ export class FlipOverlay {
 
     const targets = [source, ...Array.from(source.querySelectorAll<HTMLElement>('[data-shared-id]'))];
     const state = Flip.getState(targets, { props: FLIP_PROPS });
-    const { root, backdrop, sourceStage, contentStage, closeButton } = this.build(options);
+    const { root, backdrop, dialog, sourceStage, contentStage, closeButton } = this.build(options);
+
+    if (options.kind === 'project' && window.matchMedia('(hover: none) and (max-width: 700px)').matches) {
+      root.classList.add('is-sheet');
+    }
 
     if (options.expandClass) source.classList.add(options.expandClass);
     sourceStage.appendChild(source);
@@ -71,8 +77,8 @@ export class FlipOverlay {
     inertElements.forEach((element) => { element.inert = true; });
 
     this.active = {
-      source, placeholder, root, kind: options.kind, expandClass: options.expandClass, targets,
-      previousFocus, previousOverflow, inertElements
+      source, placeholder, root, dialog, kind: options.kind, expandClass: options.expandClass, targets,
+      previousFocus, previousOverflow, inertElements, sheetCleanup: null
     };
 
     const close = () => this.close();
@@ -83,6 +89,7 @@ export class FlipOverlay {
 
     if (prefersReducedMotion()) {
       gsap.fromTo(root, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: EASE.out });
+      this.attachSheetDrag(dialog, root);
       return;
     }
 
@@ -99,8 +106,16 @@ export class FlipOverlay {
       absolute: true,
       nested: true,
       prune: true,
-      onComplete: () => clearFlipStyles(targets)
+      onComplete: () => {
+        clearFlipStyles(targets);
+        this.attachSheetDrag(dialog, root);
+      }
     });
+
+    if (root.classList.contains('is-sheet')) {
+      const chrome = dialog.querySelectorAll<HTMLElement>('.shared-overlay__grab');
+      gsap.fromTo(chrome, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.24, delay: 0.2, ease: EASE.out });
+    }
 
     if (options.kind === 'project') {
       const details = source.querySelectorAll<HTMLElement>('.project-card__details li, .project-card__actions .text-button');
@@ -122,8 +137,17 @@ export class FlipOverlay {
     this.active = null;
     const { source, placeholder, root, kind, targets, expandClass, previousFocus, previousOverflow, inertElements } = active;
 
+    active.sheetCleanup?.();
     Flip.killFlipsOf(targets);
     gsap.killTweensOf(targets);
+    const actionButtons = source.querySelectorAll<HTMLElement>('.project-card__actions .text-button');
+    const restoreActions = () => {
+      gsap.set(actionButtons, { clearProps: 'opacity,visibility,transform' });
+    };
+    const restoreFocus = () => {
+      if (instant || this.active) return;
+      previousFocus?.focus({ preventScroll: true });
+    };
     if (kind === 'project') {
       gsap.to(source.querySelectorAll('.project-card__details li, .project-card__actions .text-button'), {
         autoAlpha: 0,
@@ -150,14 +174,86 @@ export class FlipOverlay {
         absolute: true,
         nested: true,
         prune: true,
-        onComplete: () => clearFlipStyles(targets)
+        onComplete: () => {
+          clearFlipStyles(targets);
+          restoreActions();
+          restoreFocus();
+        }
       });
     } else {
       gsap.set(targets, { clearProps: 'transform,position,top,left,width,height,zIndex,opacity' });
       clearFlipStyles(targets);
+      restoreActions();
+      restoreFocus();
     }
+  }
 
-    if (!instant) previousFocus?.focus({ preventScroll: true });
+  private attachSheetDrag(dialog: HTMLElement, root: HTMLElement): void {
+    const active = this.active;
+    if (!active || active.dialog !== dialog || !root.classList.contains('is-sheet')) return;
+
+    const grab = dialog.querySelector<HTMLElement>('.shared-overlay__grab');
+    if (!grab) return;
+    const backdrop = root.querySelector<HTMLElement>('.shared-overlay__backdrop');
+    const controller = new AbortController();
+    const dismissDistance = Math.min(160, window.innerHeight * 0.22);
+    let startY = 0;
+    let startTime = 0;
+    let delta = 0;
+    let tracking = false;
+
+    const onDown = (event: PointerEvent) => {
+      if (event.pointerType === 'mouse' || !event.isPrimary) return;
+      tracking = true;
+      startY = event.clientY;
+      startTime = performance.now();
+      delta = 0;
+      root.classList.add('is-sheet-dragging');
+      gsap.killTweensOf(dialog);
+      try {
+        grab.setPointerCapture(event.pointerId);
+      } catch {
+        // Synthetic or cancelled pointers cannot be captured; dragging still works.
+      }
+      event.preventDefault();
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (!tracking) return;
+      delta = Math.max(0, event.clientY - startY);
+      const progress = Math.min(delta / dismissDistance, 1);
+      gsap.set(dialog, { y: delta, scale: 1 - progress * 0.02 });
+      if (backdrop) gsap.set(backdrop, { opacity: 1 - progress * 0.35 });
+      event.preventDefault();
+    };
+
+    const finish = (event: PointerEvent) => {
+      if (!tracking) return;
+      tracking = false;
+      root.classList.remove('is-sheet-dragging');
+      if (grab.hasPointerCapture(event.pointerId)) grab.releasePointerCapture(event.pointerId);
+
+      const elapsed = Math.max(1, performance.now() - startTime);
+      const velocity = delta / elapsed;
+      if (delta > dismissDistance || velocity > 0.55) {
+        this.close();
+        return;
+      }
+
+      gsap.to(dialog, { y: 0, scale: 1, duration: 0.42, ease: 'power3.out', overwrite: true });
+      if (backdrop) gsap.to(backdrop, { opacity: 1, duration: 0.3, overwrite: true });
+    };
+
+    grab.addEventListener('pointerdown', onDown, { signal: controller.signal });
+    grab.addEventListener('pointermove', onMove, { signal: controller.signal });
+    grab.addEventListener('pointerup', finish, { signal: controller.signal });
+    grab.addEventListener('pointercancel', finish, { signal: controller.signal });
+
+    active.sheetCleanup = () => {
+      controller.abort();
+      root.classList.remove('is-sheet-dragging');
+      gsap.killTweensOf(dialog);
+    };
   }
 
   private build(options: OpenOptions) {
@@ -166,12 +262,20 @@ export class FlipOverlay {
     root.setAttribute('role', 'dialog');
     root.setAttribute('aria-modal', 'true');
     root.setAttribute('aria-label', options.title);
+    root.setAttribute('aria-keyshortcuts', 'Escape');
 
     const backdrop = document.createElement('div');
     backdrop.className = 'shared-overlay__backdrop';
 
     const dialog = document.createElement('div');
     dialog.className = 'shared-overlay__dialog';
+
+    const grab = document.createElement('div');
+    grab.className = 'shared-overlay__grab';
+    grab.setAttribute('aria-hidden', 'true');
+    const grip = document.createElement('span');
+    grab.appendChild(grip);
+    dialog.appendChild(grab);
 
     const closeButton = document.createElement('button');
     closeButton.type = 'button';
@@ -220,7 +324,7 @@ export class FlipOverlay {
     if (event.key !== 'Tab' || !this.active) return;
 
     const focusable = Array.from(this.active.root.querySelectorAll<HTMLElement>('button, a[href], [tabindex="0"]'))
-      .filter((element) => !element.hasAttribute('disabled'));
+      .filter((element) => !element.hasAttribute('disabled') && element.getClientRects().length > 0);
     if (!focusable.length) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];

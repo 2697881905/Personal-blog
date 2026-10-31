@@ -1,30 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">抹茶味的琴 · 工程笔记</title>
-  <desc id="desc">石墨黑背景上的站名、技术栈与工程笔记副标题</desc>
-  <rect width="1200" height="630" fill="#0e100f"/>
-  <path d="M56 86H1144M56 548H1144" stroke="#3b3a35"/>
-  <text x="72" y="60" fill="#8a8978" font-family="Arial, sans-serif" font-size="15" letter-spacing="4">MATCHA NOTES / ENGINEERING</text>
-  <text x="72" y="196" fill="#fffce1" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="72" font-weight="700" letter-spacing="-2">抹茶味的琴</text>
-  <text x="74" y="248" fill="#ff8709" font-family="Arial, sans-serif" font-size="22" letter-spacing="4">BACKEND SYSTEMS &amp; INTERFACES</text>
-  <path d="M74 282h420" stroke="#ff8709" stroke-width="3"/>
-  <text x="74" y="344" fill="#b9b7a6" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="24" letter-spacing="2">接口 / 索引 / 部署 / 原生应用</text>
-  <g font-family="Arial, sans-serif" font-size="17" fill="#8a8978" letter-spacing="2">
+  <desc id="desc">深空蓝黑背景上的站名、技术栈与工程笔记副标题</desc>
+  <rect width="1200" height="630" fill="#06080d"/>
+  <path d="M56 86H1144M56 548H1144" stroke="#2a3042"/>
+  <text x="72" y="60" fill="#98a2b8" font-family="Arial, sans-serif" font-size="15" letter-spacing="4">MATCHA NOTES / ENGINEERING</text>
+  <text x="72" y="196" fill="#e9edf5" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="72" font-weight="700" letter-spacing="-2">抹茶味的琴</text>
+  <text x="74" y="248" fill="#3f8cff" font-family="Arial, sans-serif" font-size="22" letter-spacing="4">BACKEND SYSTEMS &amp; INTERFACES</text>
+  <path d="M74 282h420" stroke="#3f8cff" stroke-width="3"/>
+  <text x="74" y="344" fill="#c6cdda" font-family="Arial, 'Microsoft YaHei', sans-serif" font-size="24" letter-spacing="2">接口 / 索引 / 部署 / 原生应用</text>
+  <g font-family="Arial, sans-serif" font-size="17" fill="#98a2b8" letter-spacing="2">
     <text x="74" y="410">JAVA</text>
     <text x="158" y="410">SPRING BOOT</text>
     <text x="316" y="410">MYSQL</text>
     <text x="410" y="410">REDIS</text>
     <text x="506" y="410">ARKTS</text>
   </g>
-  <text x="74" y="500" fill="#6f746f" font-family="Arial, sans-serif" font-size="15" letter-spacing="2">REAL PROJECTS / REAL TRADEOFFS</text>
-  <text x="1126" y="500" text-anchor="end" fill="#9d95ff" font-family="Arial, sans-serif" font-size="18" letter-spacing="2">MATCHA / 2026</text>
+  <text x="74" y="500" fill="#5f6880" font-family="Arial, sans-serif" font-size="15" letter-spacing="2">REAL PROJECTS / REAL TRADEOFFS</text>
+  <text x="1126" y="500" text-anchor="end" fill="#b39dff" font-family="Arial, sans-serif" font-size="18" letter-spacing="2">MATCHA / 2026</text>
   <g transform="translate(860 168)">
-    <rect width="250" height="250" fill="none" stroke="#5f5e55" stroke-width="2"/>
-    <path d="M36 40h178M36 210h178" stroke="#3b3a35" stroke-width="2"/>
-    <text x="36" y="82" fill="#8a8978" font-family="Arial, sans-serif" font-size="13" letter-spacing="2">~/notes</text>
-    <rect x="36" y="108" width="130" height="16" fill="#ff8709"/>
-    <rect x="36" y="142" width="178" height="8" fill="#56554e"/>
-    <rect x="36" y="164" width="150" height="8" fill="#56554e"/>
-    <rect x="36" y="186" width="112" height="8" fill="#56554e"/>
-    <text x="36" y="238" fill="#9d95ff" font-family="Arial, sans-serif" font-size="13" letter-spacing="2">200 OK</text>
+    <rect width="250" height="250" fill="none" stroke="#3a4152" stroke-width="2"/>
+    <path d="M36 40h178M36 210h178" stroke="#2a3042" stroke-width="2"/>
+    <text x="36" y="82" fill="#98a2b8" font-family="Arial, sans-serif" font-size="13" letter-spacing="2">~/notes</text>
+    <rect x="36" y="108" width="130" height="16" fill="#3f8cff"/>
+    <rect x="36" y="142" width="178" height="8" fill="#4a5266"/>
+    <rect x="36" y="164" width="150" height="8" fill="#4a5266"/>
+    <rect x="36" y="186" width="112" height="8" fill="#4a5266"/>
+    <text x="36" y="238" fill="#b39dff" font-family="Arial, sans-serif" font-size="13" letter-spacing="2">200 OK</text>
   </g>
 </svg>

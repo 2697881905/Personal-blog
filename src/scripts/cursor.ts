@@ -20,11 +20,11 @@ const CURSOR_OPTIONS = {
 const ARROW_SVG = `
   <svg viewBox="0 0 22 26" width="22" height="26" aria-hidden="true">
     <path d="M1.7 1.6v19.6l5.1-4.8 3.7 7.5 4-1.9-3.6-7.2h7.2L1.7 1.6Z"
-      fill="var(--cursor-fill, #fffce1)"
-      stroke="var(--cursor-outline, #0d0d0b)"
+      fill="var(--cursor-fill, #e9edf5)"
+      stroke="var(--cursor-outline, #06080d)"
       stroke-width="1.35"
       stroke-linejoin="round"/>
-    <circle cx="3.1" cy="3.2" r="0.9" fill="var(--cursor-accent, #ff8709)"/>
+    <circle cx="3.1" cy="3.2" r="0.9" fill="var(--cursor-accent, #3f8cff)"/>
   </svg>
 `;
 

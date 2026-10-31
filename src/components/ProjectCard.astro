@@ -48,7 +48,7 @@ const repoLink = project.gitee && project.gitee !== primaryLink ? project.gitee 
       <ul>{project.details.map((detail) => <li>{detail}</li>)}</ul>
     </div>
     <div class="project-card__actions">
-      <button type="button" class="text-button" data-project-open>
+      <button type="button" class="text-button" data-project-open aria-label={`查看 ${project.title} 项目详情`}>
         <span>open project.md</span><span aria-hidden="true">→</span>
       </button>
       {primaryLink && (

@@ -29,7 +29,7 @@
     align-items: center;
     column-gap: 10px;
     row-gap: 0;
-    padding: 4px 0 0;
+    padding: 4px max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
   }
   .site-nav__brand {
     display: inline-flex;
@@ -37,14 +37,16 @@
     align-items: center;
     font-size: 12px;
   }
-  .site-nav__actions { height: 40px; margin-left: auto; gap: 6px; }
+  .site-nav__actions { height: 44px; margin-left: auto; gap: 6px; }
   .command-trigger {
-    min-height: 40px;
+    min-height: 44px;
     padding: 0 10px;
     font-size: 10px;
   }
   .command-trigger__label { display: inline; margin-right: 0; }
   .command-trigger kbd { display: none; }
+  .theme-toggle { width: 44px; height: 44px; }
+  .theme-toggle svg { width: 16px; height: 16px; }
 
   .site-nav__links {
     display: flex;
@@ -334,8 +336,45 @@
 
   /* ── Overlays and palette ───────────────────────────────────────── */
   .shared-overlay { padding: 10px max(10px, env(safe-area-inset-left)) 10px max(10px, env(safe-area-inset-right)); }
-  .shared-overlay__close { width: 40px; height: 40px; font-size: 18px; }
+  .shared-overlay__close { width: 44px; height: 44px; font-size: 18px; }
   .shared-overlay--qr .shared-overlay__dialog { padding: 18px; }
+  .shared-overlay.is-sheet {
+    align-items: end;
+    justify-items: center;
+    padding: 0;
+  }
+  .shared-overlay.is-sheet .shared-overlay__dialog {
+    width: 100%;
+    max-height: 92svh;
+  }
+  .shared-overlay.is-sheet .shared-overlay__grab {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 4;
+    display: flex;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+  }
+  .shared-overlay.is-sheet .shared-overlay__grab span {
+    display: block;
+    width: 38px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--grab);
+  }
+  .shared-overlay.is-sheet .shared-overlay__close { top: 12px; right: 12px; }
+  .shared-overlay.is-sheet .project-card {
+    width: 100%;
+    max-height: 92svh;
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    padding: 56px 22px calc(22px + env(safe-area-inset-bottom));
+    box-shadow: 0 -18px 60px var(--shadow-strong);
+  }
   .shared-overlay .project-card {
     grid-template-columns: minmax(0, 1fr) 52px;
     min-height: 0;
@@ -385,8 +424,35 @@
   .command-palette__search input { font-size: 16px; }
 }
 
-/* Touch feedback replaces hover affordances on coarse pointers. */
-@media (hover: none) and (max-width: 700px) {
+/* Touch feedback replaces hover affordances on phone layouts. */
+@media (max-width: 700px) {
+  .site-nav__link,
+  .post-row,
+  .project-card,
+  .tag,
+  .command-trigger,
+  .theme-toggle,
+  .terminal-hints button,
+  .article-toc a,
+  .now-page__stack a,
+  .aside-stack a,
+  .text-button,
+  .section-link,
+  .hero__links a,
+  .hero__links button {
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      scale 220ms var(--ease-out),
+      color var(--dur-micro) ease,
+      background-color var(--dur-micro) ease,
+      border-color var(--dur-micro) ease;
+  }
+  .post-row__cover,
+  .project-card__logo,
+  .project-card__monogram {
+    transition: scale 260ms var(--ease-out), filter 260ms var(--ease-out);
+  }
+
   .site-nav__link:active,
   .hero__links a:active,
   .hero__links button:active,
@@ -396,13 +462,96 @@
   .now-page__links a:active,
   .site-footer__links a:active,
   .text-button:active { color: var(--accent-strong); }
+
+  .post-row:active,
+  .project-card:active {
+    scale: 0.985;
+    background-color: var(--accent-bg-hover);
+    transition-duration: 80ms;
+  }
+  .post-row:active .post-row__cover,
+  .project-card:active .project-card__logo,
+  .project-card:active .project-card__monogram {
+    scale: 1.025;
+    filter: saturate(1.06) brightness(1.03);
+  }
+  html[data-theme="light"]:not([data-hack="on"]) .post-row:active .post-row__cover {
+    filter: invert(1) saturate(1) contrast(1);
+  }
+
+  .site-nav__link:active,
+  .tag:active,
+  .article-toc a:active,
+  .now-page__stack a:active,
+  .aside-stack a:active {
+    scale: 0.96;
+    border-color: var(--accent-border-strong);
+    background: var(--accent-dim);
+    color: var(--accent-strong);
+  }
+  .text-button:active { transform: none; }
+  .text-button:active,
+  .section-link:active,
+  .hero__links a:active,
+  .hero__links button:active,
+  .command-trigger:active,
+  .theme-toggle:active,
+  .terminal-hints button:active { scale: 0.96; }
+
   .hero__links a:active,
   .hero__links button:active { background: var(--accent-dim); }
-  .post-row:active,
-  .project-card:active { background-color: rgba(255, 255, 255, 0.03); }
-  .tag:active { border-color: var(--accent); color: var(--accent-strong); }
-  .command-trigger:active { background: var(--accent-dim); border-color: var(--border-strong); }
+  .command-trigger:active { border-color: var(--border-strong); }
+  .command-item:active { background: var(--accent-dim); }
   .shared-overlay__close:active { background: var(--surface-raised); color: var(--text); }
+}
+
+/* Touch ripple at the touch point. */
+.touch-ripple {
+  position: fixed;
+  z-index: 95;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border: 1px solid var(--accent-border-strong);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-dim), transparent 68%);
+  pointer-events: none;
+  animation: touch-ripple 460ms var(--ease-out) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes touch-ripple {
+  0% { opacity: 0.5; transform: scale(0.35); }
+  70% { opacity: 0.12; }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+
+/* Route transitions get a short vertical settle on phones. */
+@media (max-width: 700px) {
+  ::view-transition-old(root) {
+    animation: mobile-route-out 140ms ease both;
+  }
+  ::view-transition-new(root) {
+    animation: mobile-route-in 240ms var(--ease-out) both;
+  }
+
+  .terminal-line.terminal-dynamic {
+    animation: mobile-terminal-in 180ms var(--ease-out) both;
+  }
+}
+
+@keyframes mobile-route-out {
+  to { opacity: 0; }
+}
+
+@keyframes mobile-route-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mobile-terminal-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Short viewports (phone landscape): the pinned trace would clip. */

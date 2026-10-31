@@ -164,7 +164,7 @@ interface Packet {
   edge: number;
   t: number;
   speed: number;
-  color: string;
+  color: number;
 }
 
 const PEER_DEFS: Array<{ label: string; bx: number; by: number; r: number }> = [
@@ -176,7 +176,8 @@ const PEER_DEFS: Array<{ label: string; bx: number; by: number; r: number }> = [
 ];
 
 const EDGES: Array<[number, number]> = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0], [0, 2]];
-const PACKET_COLORS = ['255,135,9', '157,149,255', '0,186,226'];
+const PACKET_COLORS = ['63,140,255', '139,123,255', '77,214,255'];
+const LIGHT_PACKET_COLORS = ['27,102,221', '90,79,208', '10,112,143'];
 
 function initSoftBus(): () => void {
   const hero = document.querySelector<HTMLElement>('.hero');
@@ -222,7 +223,7 @@ function initSoftBus(): () => void {
     edge,
     t: (slot + edge * 0.31) % 1,
     speed: 0.1 + Math.random() * 0.07,
-    color: PACKET_COLORS[(edge + slot) % PACKET_COLORS.length]
+    color: (edge + slot) % PACKET_COLORS.length
   })));
 
   const bend = (peerA: Peer, peerB: Peer, edge: number) => {
@@ -263,6 +264,11 @@ function initSoftBus(): () => void {
     if (boost > 1) boost = Math.max(1, boost - dt * 0.9);
 
     const hack = document.documentElement.dataset.hack === 'on';
+    const light = !hack && document.documentElement.dataset.theme === 'light';
+    const accentTone = light ? '27,102,221' : '63,140,255';
+    const inkTone = light ? '11,18,32' : '233,237,245';
+    const labelToneInk = light ? '90,102,120' : '152,162,184';
+    const packetPalette = light ? LIGHT_PACKET_COLORS : PACKET_COLORS;
     const t = time / 1000;
     ctx.clearRect(0, 0, width, height);
     ctx.lineWidth = 1;
@@ -274,7 +280,7 @@ function initSoftBus(): () => void {
       peer.y = peer.by * height + Math.cos(t * 0.22 + peer.phase * 1.3) * peer.amp;
     });
 
-    const lineColor = hack ? 'rgba(0,255,156,0.18)' : 'rgba(255,252,225,0.11)';
+    const lineColor = hack ? 'rgba(0,255,156,0.18)' : light ? 'rgba(11,18,32,0.14)' : 'rgba(233,237,245,0.11)';
     EDGES.forEach(([from, to], edge) => {
       const { cx, cy } = bend(peers[from], peers[to], edge);
       ctx.strokeStyle = lineColor;
@@ -292,11 +298,11 @@ function initSoftBus(): () => void {
       const { cx, cy } = bend(peerA, peerB, packet.edge);
       const head = qPoint(peerA.x, peerA.y, cx, cy, peerB.x, peerB.y, packet.t);
       const tail = qPoint(peerA.x, peerA.y, cx, cy, peerB.x, peerB.y, Math.max(0, packet.t - 0.07));
-      ctx.fillStyle = `rgba(${packet.color},0.32)`;
+      ctx.fillStyle = `rgba(${packetPalette[packet.color]},0.32)`;
       ctx.beginPath();
       ctx.arc(tail.x, tail.y, 1.6, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = `rgba(${packet.color},0.92)`;
+      ctx.fillStyle = `rgba(${packetPalette[packet.color]},0.92)`;
       ctx.beginPath();
       ctx.arc(head.x, head.y, 2.2, 0, Math.PI * 2);
       ctx.fill();
@@ -319,8 +325,8 @@ function initSoftBus(): () => void {
 
     peers.forEach((peer, index) => {
       const near = index === nearIndex;
-      const tone = near ? '255,135,9' : hack ? '0,255,156' : '255,252,225';
-      const labelTone = near ? '255,135,9' : hack ? '0,255,156' : '185,183,166';
+      const tone = near ? accentTone : hack ? '0,255,156' : inkTone;
+      const labelTone = near ? accentTone : hack ? '0,255,156' : labelToneInk;
 
       ctx.strokeStyle = `rgba(${tone},0.55)`;
       ctx.beginPath();
@@ -334,12 +340,12 @@ function initSoftBus(): () => void {
       ctx.fillText(peer.label, peer.x, peer.y + peer.r + 13);
 
       if (near) {
-        ctx.strokeStyle = 'rgba(255,135,9,0.22)';
+        ctx.strokeStyle = `rgba(${accentTone},0.22)`;
         ctx.beginPath();
         ctx.arc(peer.x, peer.y, peer.r + 8, 0, Math.PI * 2);
         ctx.stroke();
         ctx.setLineDash([3, 5]);
-        ctx.strokeStyle = 'rgba(255,135,9,0.6)';
+        ctx.strokeStyle = `rgba(${accentTone},0.6)`;
         ctx.beginPath();
         ctx.moveTo(peer.x, peer.y);
         ctx.lineTo(pointerX, pointerY);
@@ -351,7 +357,7 @@ function initSoftBus(): () => void {
         const age = t - peer.pulse;
         if (age < 1.4) {
           const k = age / 1.4;
-          ctx.strokeStyle = `rgba(${hack ? '0,255,156' : '255,135,9'},${(1 - k) * 0.55})`;
+          ctx.strokeStyle = `rgba(${hack ? '0,255,156' : accentTone},${(1 - k) * 0.55})`;
           ctx.beginPath();
           ctx.arc(peer.x, peer.y, peer.r + 4 + k * 30, 0, Math.PI * 2);
           ctx.stroke();

@@ -10,6 +10,8 @@ import { initSmoothScroll } from './smooth';
 import { initCursor } from './cursor';
 import { initTrace } from './trace';
 import { initHackerExperience } from './hacker';
+import { initTouchFeedback } from './touch';
+import { initThemeToggle } from './theme';
 
 let cleanups: Array<() => void> = [];
 let motionCleanups: Array<() => void> = [];
@@ -72,6 +74,8 @@ export function initSite(): void {
     initCommandPalette(),
     initReading(),
     initClocks(),
+    initTouchFeedback(),
+    initThemeToggle(),
     destroyMotionExperience
   ];
   refreshMotionExperience();

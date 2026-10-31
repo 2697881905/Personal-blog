@@ -29,6 +29,7 @@ export function initReading(): () => void {
     const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     if (bar) bar.style.transform = `scaleX(${ratio})`;
     progress?.classList.toggle('is-visible', window.scrollY > 20);
+    doc.style.setProperty('--grid-shift', `${(window.scrollY * 0.05).toFixed(1)}px`);
 
     if (headings.length) {
       let current = headings[0];

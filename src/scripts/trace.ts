@@ -27,9 +27,14 @@ export function initTrace(): () => void {
   section.classList.add('is-animated');
   let lastStage = -1;
 
+  const setStage = (stage: number) => {
+    nodes.forEach((node, index) => node.classList.toggle('is-current', index === stage));
+  };
+
   const context = gsap.context(() => {
-    gsap.set(nodes, { opacity: 0.28, borderColor: 'rgba(255,252,225,0.11)' });
-    gsap.set(nodes[0], { opacity: 1, borderColor: 'rgba(0,255,156,0.55)' });
+    gsap.set(nodes, { opacity: 0.28 });
+    gsap.set(nodes[0], { opacity: 1 });
+    setStage(0);
     gsap.set(lines, { opacity: 0.28 });
     gsap.set(lines[0], { opacity: 1 });
     gsap.set(fill, { scaleX: 0 });
@@ -47,6 +52,7 @@ export function initTrace(): () => void {
           const stage = Math.min(4, Math.floor(self.progress * 5));
           if (stage === lastStage) return;
           lastStage = stage;
+          setStage(stage);
           if (index) index.textContent = `0${stage + 1}`;
           if (status) status.textContent = STAGES[stage];
           if (consoleStatus) consoleStatus.textContent = CONSOLE_STATES[stage];
@@ -63,13 +69,11 @@ export function initTrace(): () => void {
       const at = stage * 0.2;
       timeline.to(node, {
         opacity: 1,
-        borderColor: 'rgba(0,255,156,0.55)',
         duration: 0.09
       }, at);
       if (stage > 0) {
         timeline.to(nodes[stage - 1], {
           opacity: 0.52,
-          borderColor: 'rgba(255,252,225,0.11)',
           duration: 0.1
         }, at);
       }
@@ -84,6 +88,7 @@ export function initTrace(): () => void {
 
   return () => {
     context.revert();
+    nodes.forEach((node) => node.classList.remove('is-current'));
     section.classList.remove('is-animated');
     gsap.set([...nodes, ...lines, fill, pulse], { clearProps: 'all' });
   };
