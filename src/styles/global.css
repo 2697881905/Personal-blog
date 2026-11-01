@@ -1782,6 +1782,22 @@ html[data-theme="light"]:not([data-hack="on"]) .scroll-progress__nib {
 ::view-transition-old(root) { animation: none !important; opacity: 0 !important; mix-blend-mode: normal; }
 ::view-transition-new(root) { animation: none !important; opacity: 1 !important; mix-blend-mode: normal; }
 
+/* Theme switch crossfade: old page fades out while the new palette fades in. */
+html.theme-transition * { view-transition-name: none !important; }
+html.theme-transition::view-transition-group(root) { animation-duration: 460ms !important; }
+html.theme-transition::view-transition-old(root) {
+  animation: theme-fade-out 460ms var(--ease-out) both !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal;
+}
+html.theme-transition::view-transition-new(root) {
+  animation: theme-fade-in 460ms var(--ease-out) both !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal;
+}
+@keyframes theme-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes theme-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
 ::view-transition-group(*.cover) { animation-duration: var(--vt-cover-dur); animation-delay: var(--vt-cover-delay); }
 ::view-transition-new(*.cover) { animation: var(--vt-cover-dur) var(--ease-route) var(--vt-cover-delay) both var(--vt-cover-anim); }
 ::view-transition-group(*.index) { animation-duration: var(--vt-index-dur); animation-delay: var(--vt-index-delay); }

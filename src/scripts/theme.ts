@@ -4,6 +4,15 @@ const DARK_THEME_COLOR = '#06080d';
 
 export type Theme = 'light' | 'dark';
 
+interface ThemeViewTransition {
+  ready: Promise<void>;
+  finished: Promise<void>;
+}
+
+type ThemeTransitionDocument = Document & {
+  startViewTransition?: (callback: () => void) => ThemeViewTransition;
+};
+
 function storedTheme(): Theme | null {
   try {
     const value = localStorage.getItem(THEME_KEY);
@@ -71,9 +80,35 @@ export function initThemeToggle(): () => void {
   // 每次路由切换后重新应用已保存偏好，避免旧属性覆盖用户选择。
   applyTheme(theme, false);
 
+  let transitioning = false;
   const onClick = (event: Event) => {
-    pulseFrom(event.currentTarget as HTMLElement);
-    applyTheme(currentTheme() === 'light' ? 'dark' : 'light', true);
+    if (transitioning) return;
+    const button = event.currentTarget as HTMLElement;
+    const next: Theme = currentTheme() === 'light' ? 'dark' : 'light';
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const doc = document as ThemeTransitionDocument;
+
+    if (!doc.startViewTransition || reduce) {
+      if (!reduce) pulseFrom(button);
+      applyTheme(next, true);
+      return;
+    }
+
+    transitioning = true;
+    root.classList.add('theme-transition');
+    try {
+      const transition = doc.startViewTransition(() => applyTheme(next, true));
+      transition.ready.then(() => pulseFrom(button)).catch(() => {});
+      transition.finished.finally(() => {
+        transitioning = false;
+        root.classList.remove('theme-transition');
+      }).catch(() => {});
+    } catch {
+      transitioning = false;
+      root.classList.remove('theme-transition');
+      pulseFrom(button);
+      applyTheme(next, true);
+    }
   };
 
   buttons.forEach((button) => button.addEventListener('click', onClick));
