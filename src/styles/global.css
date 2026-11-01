@@ -1290,6 +1290,20 @@ html[data-theme="light"] .theme-toggle .theme-toggle__moon { display: block; }
 }
 .scroll-progress.is-visible { opacity: 1; }
 .scroll-progress span { display: block; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+.scroll-progress__nib { display: none; }
+html[data-theme="light"]:not([data-hack="on"]) .scroll-progress__nib {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--bg), 0 0 10px var(--accent-border-strong);
+  transition: left 120ms linear;
+}
 .section-rail {
   position: fixed;
   right: 18px;
@@ -2537,7 +2551,12 @@ html[data-theme="light"]:not([data-hack="on"]) .section-rail::before {
 html[data-theme="light"]:not([data-hack="on"]) .section-rail__label { color: #626e80; }
 html[data-theme="light"]:not([data-hack="on"]) .section-rail a { color: #4f5b6e; }
 html[data-theme="light"]:not([data-hack="on"]) .section-rail a span { color: #5a6678; }
-html[data-theme="light"]:not([data-hack="on"]) .section-rail a.is-active { background: #0b1220; color: #f2f5fa; }
+html[data-theme="light"]:not([data-hack="on"]) .section-rail a.is-active { background: #0b1220; color: #f2f5fa; animation: rail-ink-settle 260ms var(--ease-out); }
+@keyframes rail-ink-settle {
+  0% { transform: translateX(-3px); opacity: 0.65; }
+  60% { transform: translateX(1px); opacity: 1; }
+  100% { transform: translateX(0); opacity: 1; }
+}
 html[data-theme="light"]:not([data-hack="on"]) .section-rail a.is-active span { color: #f2f5fa; }
 html[data-theme="light"]:not([data-hack="on"]) .section-rail.is-on-cream::before {
   background: linear-gradient(90deg, rgba(8, 11, 18, 0), rgba(8, 11, 18, 0.92) 34%, #080b12);
@@ -2581,12 +2600,27 @@ html[data-theme="light"]:not([data-hack="on"]) body::after {
   background-position: 0 var(--grid-shift, 0px);
 }
 
+html[data-theme="light"]:not([data-hack="on"]) .prose a {
+  background-image: linear-gradient(180deg, transparent 66%, rgba(27, 102, 221, 0.14) 66%);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 260ms var(--ease-out), color var(--dur-micro) ease;
+}
+html[data-theme="light"]:not([data-hack="on"]) .prose a:hover { background-size: 100% 100%; }
+
 /* 物理道具与图片在纸面上不再压暗。 */
 html[data-theme="light"]:not([data-hack="on"]) .piano-key { background: #f8fafe; color: #38455a; box-shadow: inset 0 -1px 0 rgba(11, 18, 32, 0.12); }
 html[data-theme="light"]:not([data-hack="on"]) .piano-key i { background: #151c2a; }
 html[data-theme="light"]:not([data-hack="on"]) .post-row__cover { filter: invert(1) saturate(0.9) contrast(0.96); }
 html[data-theme="light"]:not([data-hack="on"]) .post-row:hover .post-row__cover { filter: invert(1) saturate(0.98) contrast(1); }
-html[data-theme="light"]:not([data-hack="on"]) .article-hero__cover { filter: invert(1) saturate(0.9) contrast(0.96); }
+html[data-theme="light"]:not([data-hack="on"]) .article-hero__cover {
+  filter: invert(1) saturate(0.9) contrast(0.96);
+  animation: light-cover-develop 840ms var(--ease-out) both;
+}
+@keyframes light-cover-develop {
+  0% { filter: invert(1) saturate(0.55) contrast(0.86) brightness(1.12); opacity: 0.82; }
+  100% { filter: invert(1) saturate(0.9) contrast(0.96) brightness(1); opacity: 1; }
+}
 html[data-theme="light"]:not([data-hack="on"]) .post-row__cover-link::after {
   position: absolute;
   inset: 0;

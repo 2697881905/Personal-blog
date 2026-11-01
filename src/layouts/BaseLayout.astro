@@ -109,7 +109,7 @@ const ogImage = image && Astro.site ? new URL(image, Astro.site).href : undefine
     </div>
     <a class="skip-link" href="#main-content">跳到正文</a>
     <Navbar />
-    <div class="scroll-progress" data-scroll-progress aria-hidden="true"><span data-scroll-bar></span></div>
+    <div class="scroll-progress" data-scroll-progress aria-hidden="true"><span data-scroll-bar></span><i class="scroll-progress__nib" data-scroll-nib></i></div>
     <main id="main-content">
       <slot />
     </main>

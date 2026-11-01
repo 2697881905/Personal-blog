@@ -1,6 +1,7 @@
 export function initReading(): () => void {
   const bar = document.querySelector<HTMLElement>('[data-scroll-bar]');
   const progress = document.querySelector<HTMLElement>('[data-scroll-progress]');
+  const nib = document.querySelector<HTMLElement>('[data-scroll-nib]');
   const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
   const sectionLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-section-link]'));
   const rail = document.querySelector<HTMLElement>('[data-section-rail]');
@@ -28,6 +29,7 @@ export function initReading(): () => void {
     const max = doc.scrollHeight - window.innerHeight;
     const ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     if (bar) bar.style.transform = `scaleX(${ratio})`;
+    if (nib) nib.style.left = `${ratio * 100}%`;
     progress?.classList.toggle('is-visible', window.scrollY > 20);
     doc.style.setProperty('--grid-shift', `${(window.scrollY * 0.05).toFixed(1)}px`);
 
