@@ -1784,14 +1784,14 @@ html[data-theme="light"]:not([data-hack="on"]) .scroll-progress__nib {
 
 /* Theme switch crossfade: old page fades out while the new palette fades in. */
 html.theme-transition * { view-transition-name: none !important; }
-html.theme-transition::view-transition-group(root) { animation-duration: 460ms !important; }
+html.theme-transition::view-transition-group(root) { animation-duration: 800ms !important; }
 html.theme-transition::view-transition-old(root) {
-  animation: theme-fade-out 460ms var(--ease-out) both !important;
+  animation: theme-fade-out 800ms cubic-bezier(0.37, 0, 0.63, 1) both !important;
   opacity: 1 !important;
   mix-blend-mode: normal;
 }
 html.theme-transition::view-transition-new(root) {
-  animation: theme-fade-in 460ms var(--ease-out) both !important;
+  animation: theme-fade-in 800ms cubic-bezier(0.37, 0, 0.63, 1) both !important;
   opacity: 1 !important;
   mix-blend-mode: normal;
 }
