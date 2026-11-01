@@ -2059,17 +2059,20 @@ body::after {
 }
 .crt__beam {
   position: absolute;
-  top: -12%;
+  top: -14%;
   left: 0;
   right: 0;
-  height: 10%;
+  height: 14%;
   content: '';
-  background: linear-gradient(180deg, transparent, rgba(0, 255, 156, 0.05) 55%, rgba(0, 255, 156, 0.11) 82%, transparent);
-  animation: crt-beam 9s linear infinite;
+  background: linear-gradient(180deg, transparent, rgba(63, 140, 255, 0.03) 42%, rgba(63, 140, 255, 0.065) 70%, transparent);
+  animation: crt-beam 16s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  will-change: transform, opacity;
 }
 @keyframes crt-beam {
-  0% { transform: translateY(-20vh); }
-  100% { transform: translateY(140vh); }
+  0% { transform: translateY(-24vh); opacity: 0; }
+  14% { opacity: 1; }
+  86% { opacity: 1; }
+  100% { transform: translateY(130vh); opacity: 0; }
 }
 .crt__noise {
   position: absolute;
@@ -2092,6 +2095,7 @@ body::after {
   background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 62%, var(--crt-vignette) 100%);
 }
 html[data-hack="on"] .crt::before { background: repeating-linear-gradient(0deg, rgba(0, 20, 10, 0.2) 0 1px, transparent 1px 3px); }
+html[data-hack="on"] .crt__beam { background: linear-gradient(180deg, transparent, rgba(0, 255, 156, 0.03) 42%, rgba(0, 255, 156, 0.06) 70%, transparent); }
 
 /* ── Boot screen ──────────────────────────────────────────── */
 .boot-screen {
@@ -2602,7 +2606,7 @@ html[data-theme="light"]:not([data-hack="on"]) .konami-hint { color: var(--faint
 html[data-theme="light"]:not([data-hack="on"]) .ide-tip { box-shadow: 0 18px 44px rgba(30, 41, 59, 0.18), 0 0 0 1px rgba(30, 41, 59, 0.08); }
 html[data-theme="light"]:not([data-hack="on"]) .softbus-canvas { opacity: 0.8; }
 html[data-theme="light"]:not([data-hack="on"]) .crt__beam {
-  background: linear-gradient(180deg, transparent, rgba(27, 102, 221, 0.04) 55%, rgba(27, 102, 221, 0.09) 82%, transparent);
+  background: linear-gradient(180deg, transparent, rgba(27, 102, 221, 0.025) 42%, rgba(27, 102, 221, 0.055) 70%, transparent);
 }
 
 /* 深色屏幕保留一套独立的夜间令牌。 */
