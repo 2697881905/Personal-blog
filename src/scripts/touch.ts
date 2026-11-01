@@ -12,6 +12,10 @@ const TOUCH_TARGETS = [
   '.command-item',
   '.section-link',
   '.now-page__stack a',
+  '.now-page__links a',
+  '.verified-work__tags a',
+  '.verified-work__repo',
+  '.site-footer__links a',
   '.aside-stack a'
 ].join(',');
 
