@@ -60,7 +60,7 @@ src/scripts/
 
 `html[data-theme="light"]` 将同一套语义令牌换成蓝图纸面：`--bg #f2f5fa`、`--text #0b1220`、`--accent #1b66dd`、`--faint #5a6678`，并用 `--scrim-solid #dfe4ec` 处理减少透明度场景的遮罩。文章封面在浅色下做 `invert(1)`，让深色截图变成浅色纸面；`.terminal-card`、`.trace-console`、`.code-block` 继续使用独立夜间令牌，保证等宽文本对比度。主题偏好存于 `matcha:theme`，首屏前由内联脚本写入 `data-theme`，导航栏按钮只切换已保存值，不接管系统设置。
 
-主题切换时通过 `document.startViewTransition` 对根快照做 800ms 交叉淡入，使用 `cubic-bezier(0.37, 0, 0.63, 1)` 缓入缓出；过渡期间给 `html` 加 `theme-transition`，临时移除所有元素的 `view-transition-name`，避免品牌和文章共享元素单独飞行；新快照就绪后再释放墨滴涟漪，过渡结束后恢复命名。系统开启减少动效时退回即时切换。
+主题切换时通过 `document.startViewTransition` 分两段淡出淡入：旧根快照用 800ms 淡出到目标主题的 `--bg` 底色，新根快照延迟 800ms 后再用 800ms 淡入，总时长 1.6s；过渡期间给 `html` 加 `theme-transition`，临时移除所有元素的 `view-transition-name`，避免品牌和文章共享元素单独飞行；新快照就绪后再释放墨滴涟漪，过渡结束后恢复命名。系统开启减少动效时退回即时切换。
 
 浅色模式另有四层细节：开机自检改成纸面蓝图网格；`body::after` 的 54px 网格按 `scrollY × 0.05` 缓慢位移；文章封面悬停时由 `::after` 扫过一条 720ms 的蓝色绘图线；主题按钮切换时释放一圈 620ms、始终 1px 描边的墨滴涟漪，并带 Sun / Moon 图标的 240ms 旋转反馈。
 
@@ -226,7 +226,7 @@ src/scripts/
 - 项目浮层：编号放大到 180px 描边水印，详情行依次进入；关闭走 280ms 反向 Flip。
 - 响应式：1440 / 1280 / 1024 / 390 均无横向溢出；1920 内容列 1440、标题 132px、终端 540px；1536 标题 115.6px；1024 标题 76.7px；390 文章全幅封面 390px，标题 54.6px；1366×768 首屏高度 598px，跑马灯完整可见；章节 rail 仅在 ≥1400px 显示。
 - 深浅色：系统深色 → `#06080d`，切换浅色 → `#f2f5fa`；`matcha:theme` 跨路由保持，按钮 `aria-pressed` / `aria-label` 同步；390px 主题按钮与命令按钮均为 44px；浅色封面 `invert(1)`，终端 / 代码块保留夜间令牌；减少透明度时遮罩 `#dfe4ec`。正文对比度 17.1:1；弱化文字深色 4.7:1、浅色 5.3:1；rail 激活态深色 6.1:1、浅色 17.1:1。
-- 主题切换：`theme-fade-out` / `theme-fade-in` 各 800ms，使用 `cubic-bezier(0.37, 0, 0.63, 1)` 缓入缓出，动画只作用于 root，`site-brand` 等命名元素在过渡期间被禁用；`theme-transition` 在 800ms 后移除，涟漪在 `ready` 后出现并在 720ms 内清理，控制台 0 报错。
+- 主题切换：`theme-fade-out` 800ms 先淡出到目标底色，`theme-fade-in` 延迟 800ms 再淡入 800ms，总时长 1.6s，缓动为 `cubic-bezier(0.37, 0, 0.63, 1)`；动画只作用于 root，`site-brand` 等命名元素在过渡期间被禁用；`theme-transition` 在 1.6s 后移除，涟漪在 `ready` 后出现并在 720ms 内清理，控制台 0 报错。
 - 浅色动效：自检屏 `#f2f5fa` 纸面 + 54px 蓝图网格；滚动 800px 后网格偏移 40px；封面扫描动画 `light-cover-scan` 720ms；主题涟漪 620ms、描边恒为 1px，结束后节点自动移除；系统减少动效时跳过主题涟漪。滚动墨点随进度移动，正文链接荧光笔 `background-size` 0% → 100%，rail 激活 `rail-ink-settle` 260ms，文章封面 `light-cover-develop` 840ms。
 - 1920 文章页：全幅封面 1905×1072，标题单行；1920 宣言三行各占一行，22 词中 19 个点亮。
 - 浏览器运行时异常：0；完整动效固定运行，不再提供偏好切换。
