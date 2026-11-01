@@ -22,7 +22,6 @@
 | 跨页转场 | **View Transitions API** | 5 类文章共享元素 + 品牌，`view-transition-class` 分组编排 |
 | 页内共享 | **GSAP Flip** | 项目、二维码、图片、代码全屏 |
 | 速度反馈 | **ScrollTrigger velocity + quickTo** | 跑马灯变速、列表 skew、缩略图 3D tilt |
-| 光标 | 技术箭头指针（`data-cursor="technical"`） | 默认启用；动作提示显示在元素原位，删除属性可恢复原生指针 |
 | 代码高亮 | **Shiki `vesper`** | 深色语法，低饱和强调，避免与蓝色主色争抢 |
 | 框架 | **Astro 4.16 + TypeScript** | 静态生成、文件路由、内容集合 |
 
@@ -32,7 +31,6 @@ src/scripts/
 ├── hacker.ts          # CRT 叠层、开机自检、软总线拓扑、ArkTS inspector、终端彩蛋
 ├── trace.ts           # ArkUI 状态变更的滚动叙事，正反向 scrub
 ├── smooth.ts          # Lenis 生命周期与锚点滚动
-├── cursor.ts          # 技术箭头指针（默认启用）与配置项
 ├── reading.ts         # 全局滚动进度、章节 rail、文章目录
 ├── palette.ts         # Ctrl K 命令面板
 ├── terminal.ts        # 可输入终端（neofetch / hdc / hilog / bus / 彩蛋命令）
@@ -107,9 +105,7 @@ src/scripts/
 
 ### 3.4 反馈层：细节动效
 
-默认使用系统指针；日志行 hover 在行尾显示 `READ`，项目行在原位显示 `OPEN`，不依赖鼠标跟随层。桌面端缩略图随指针做最多 10° / 7° 的 3D 倾斜；列表整体按滚动速度做最多 2.2° 的 skew，停止滚动后 500ms 回正。可选技术指针只在 `<html data-cursor="technical">` 时启用，并默认采用 1:1 坐标更新，不做插值。按钮按压、滚动进度、章节 rail 和目录高亮控制在 120–280ms。
-
-**指针配置**：`CURSOR_OPTIONS.followDuration` 默认 `0`（精确跟随），`hideNative` 控制系统指针是否隐藏。任意元素通过 `data-cursor="read|open|…"` 定义技术指针的动作标签。视觉由 `--cursor-fill`、`--cursor-outline`、`--cursor-accent`、`--cursor-label-gap` 四个 CSS 变量控制。
+默认使用系统原生鼠标指针，不接管、隐藏或延迟；日志行 hover 在行尾显示 `READ`，项目行在原位显示 `OPEN`。桌面端缩略图随指针做最多 10° / 7° 的 3D 倾斜；列表整体按滚动速度做最多 2.2° 的 skew，停止滚动后 500ms 回正。按钮按压、滚动进度、章节 rail 和目录高亮控制在 120–280ms。
 
 ## 4. `data-shared-id` 约定
 
@@ -171,7 +167,6 @@ src/scripts/
 | 项目详情 | 展开后 | y 16px + opacity，逐条 | 420ms，stagger 45ms |
 | 路由转场 | 站内导航 | View Transitions，按 class 分组 | 封面 620ms、编号 580ms、标题 520ms、chip 320ms；延迟 0/40/80/0ms；桌面 `expo.out`，移动 420ms |
 | 文章收尾 | 转场落地后 | 摘要与标签 y 16px + opacity | 520ms，stagger 40ms |
-| 可选技术指针 | 显式启用 | 1:1 `x/y` 定位；动作标签 | 0ms 跟随；按压 100–160ms |
 | 顶栏滚动进度 | 任意滚动 | `scaleX` | 1:1 跟随，无缓动 |
 | 章节 rail | 首页滚动 | 当前区块高亮 | 160ms |
 | 目录联动 | 标题越过视口上沿 | 边框与颜色 | 160ms |
@@ -196,7 +191,7 @@ src/scripts/
 ## 9. 动效策略
 
 - 站点固定 `data-motion="full"`，不提供偏好切换；启动时清除旧的 `matcha:motion` 存储。
-- 完整动效覆盖系统低动效：启用 Lenis、GSAP 场景和完整共享转场；技术箭头指针默认启用，删除 `data-cursor="technical"` 可恢复原生指针。
+- 完整动效覆盖系统低动效：启用 Lenis、GSAP 场景和完整共享转场；使用系统原生指针。
 - 低动效 CSS / JS 分支保留为防御代码，但正常入口不会触发。
 - 无 JavaScript 时内容仍然完整可见；所有场景动画只增强，不承载内容。
 
@@ -213,7 +208,7 @@ src/scripts/
 ## 11. 验证记录
 
 - `npm run build`：11 个静态路由（含 404，7 篇文章）构建通过；`npm run check`：0 errors / 0 warnings / 1 hint。
-- 完整动效：首屏 6 个拆分字符、22 个宣言词、2 条跑马灯、Lenis、状态追踪、软总线 Canvas 与滚动进度全部启动；技术箭头指针默认启用。
+- 完整动效：首屏 6 个拆分字符、22 个宣言词、2 条跑马灯、Lenis、状态追踪、软总线 Canvas 与滚动进度全部启动；使用系统原生指针。
 - 极客层：CRT 扫描线 / beam / 噪点 / 暗角常驻；开机自检每会话一次，可点击或按键跳过；`bus` 命令触发软总线全节点脉冲；Konami 序列切换磷光绿主题。
 - 移动端交互：触点涟漪、卡片与标签独立 `scale` 按压、项目详情底部 sheet 下拉关闭、路由 8px 落位、终端新行 180ms 入场。
 - 触摸无障碍：涟漪标记 `aria-hidden`；sheet 使用 `role="dialog"`、`aria-modal`、`aria-keyshortcuts="Escape"`，焦点落在关闭按钮并在弹层内循环；Escape、关闭按钮或下拉均可退出，关闭后焦点回到触发按钮；拖拽把手与关闭按钮触控高度均为 44px。
@@ -225,7 +220,7 @@ src/scripts/
 - 宣言章节：背景 `#e9edf5`，章节 rail 自动反相；中段计数 `03 / 03`，22 个词中 19 个已点亮，进度线与光晕同步。
 - 速度反馈：列表 `skewY` 最大 2.2°，停止后回到 0；缩略图悬停产生约 4° / 5° 的 3D 倾斜。
 - 动效策略：固定 `data-motion="full"`；低动效分支仅作为防御代码保留，正常入口不会触发。
-- 指针：默认创建技术箭头 `.cursor` 层并启用 `has-custom-cursor`；`READ` / `OPEN` / `inspect` 作为动作标签。删除 `<html data-cursor="technical">` 即回到系统指针。
+- 指针：使用系统原生鼠标指针，不创建跟随层、不隐藏系统指针；页面不写 `cursor: none`。
 - 项目浮层：编号放大到 180px 描边水印，详情行依次进入；关闭走 280ms 反向 Flip。
 - 响应式：1440 / 1280 / 1024 / 390 均无横向溢出；1920 内容列 1440、标题 132px、终端 540px；1536 标题 115.6px；1024 标题 76.7px；390 文章全幅封面 390px，标题 54.6px；1366×768 首屏高度 598px，跑马灯完整可见；章节 rail 仅在 ≥1400px 显示。
 - 深浅色：系统深色 → `#06080d`，切换浅色 → `#f2f5fa`；`matcha:theme` 跨路由保持，按钮 `aria-pressed` / `aria-label` 同步；390px 主题按钮与命令按钮均为 44px；浅色封面 `invert(1)`，终端 / 代码块保留夜间令牌；减少透明度时遮罩 `#dfe4ec`。正文对比度 17.1:1；弱化文字深色 4.7:1、浅色 5.3:1；rail 激活态深色 6.1:1、浅色 17.1:1。

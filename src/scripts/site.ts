@@ -7,7 +7,6 @@ import { initReading } from './reading';
 import { initMotionScenes } from './motion';
 import { motionEnabled } from './motion-control';
 import { initSmoothScroll } from './smooth';
-import { initCursor } from './cursor';
 import { initTrace } from './trace';
 import { initHackerExperience } from './hacker';
 import { initTouchFeedback } from './touch';
@@ -28,7 +27,6 @@ function refreshMotionExperience(): void {
     initMotionScenes(),
     initTrace(),
     initSmoothScroll(),
-    initCursor(),
     initHackerExperience()
   ];
 }

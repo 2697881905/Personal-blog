@@ -48,18 +48,6 @@ npm run preview
 - 所有页面顶部有滚动进度线；桌面首页右侧的 sections rail 会随滚动定位当前章节，进入月光白宣言区时自动反相。
 - 文章详情有根据滚动位置联动的目录、代码复制/全屏与图片灯箱。
 - 标签筛选会真正把标签节点移入筛选栏，并支持浏览器前进/后退与 URL 分享。
-- 技术风格箭头指针默认启用；文章行和项目行在原位显示 `READ` / `OPEN` 动作提示。
-
-## 指针可配置项
-
-技术箭头指针是默认行为（`BaseLayout` 中的 `<html data-cursor="technical">`）。想换回系统指针时删除该属性即可：
-
-- `data-cursor="read|open|..."`：为任意元素定义动作标签。
-- `CURSOR_OPTIONS.followDuration`：默认 `0`，表示 1:1 精确跟随；大于 `0` 才会产生拖尾。
-- `CURSOR_OPTIONS.hideNative`：技术指针模式下是否隐藏系统指针。
-- `--cursor-fill`：箭头填充色，默认 `#e9edf5`。
-- `--cursor-outline`：箭头描边色，默认 `#06080d`。
-- `--cursor-accent`：热点和动作标签颜色，默认鸿蒙蓝 `#3f8cff`。
-- `--cursor-label-gap`：标签相对指针的间距。
+- 使用系统原生鼠标指针；文章行和项目行仍在原位显示 `READ` / `OPEN` 动作提示。
 
 详细转场地图和参数见 [ARCHITECTURE.md](./ARCHITECTURE.md)。
