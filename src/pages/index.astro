@@ -3,12 +3,10 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TerminalHero from '../components/TerminalHero.astro';
 import PostCard from '../components/PostCard.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import VerifiedWork from '../components/VerifiedWork.astro';
 import RequestTrace from '../components/RequestTrace.astro';
 import Manifesto from '../components/Manifesto.astro';
 import profile from '../data/profile.json';
-import projects from '../data/projects.json';
 import { TECH_LINKS } from '../data/tech-links';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
@@ -140,19 +138,6 @@ const asciiPanel = [
 
   <RequestTrace />
 
-  <section class="section shell" id="projects">
-    <div class="section-head" data-reveal>
-      <div>
-        <p class="path-label"><span class="path-label__tilde">~</span>/projects</p>
-        <h2 data-split>项目记录</h2>
-      </div>
-      <p class="section-head__note">selected work / {String(projects.length).padStart(2, '0')} entries</p>
-    </div>
-    <div class="project-list">
-      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
-    </div>
-  </section>
-
   <section class="section shell" id="about">
     <div class="section-head" data-reveal>
       <div>
@@ -194,7 +179,6 @@ const asciiPanel = [
     <a href="#posts" data-section-link><span>01</span>notes</a>
     <a href="#manifesto" data-section-link><span>02</span>manifesto</a>
     <a href="#trace" data-section-link><span>03</span>trace</a>
-    <a href="#projects" data-section-link><span>04</span>projects</a>
-    <a href="#about" data-section-link><span>05</span>about</a>
+    <a href="#about" data-section-link><span>04</span>about</a>
   </nav>
 </BaseLayout>
